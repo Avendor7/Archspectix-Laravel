@@ -7,6 +7,7 @@ defineProps()
     <Head title="Archspectix" />
     <div>
         <nav>
+            <button>Button</button>
             <a href="https://archlinux.org" class="split">Arch Linux</a>
             <a href="https://wiki.archlinux.org/title/Main_page" class="split">Arch Wiki</a>
             <a href="https://archlinux.org/packages/" class="split">Arch Package Search</a>
