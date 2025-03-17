@@ -5,14 +5,17 @@ defineProps()
 
 <template>
     <Head title="Archspectix" />
-    <header>
+    <div>
         <nav>
             <a href="https://archlinux.org" class="split">Arch Linux</a>
             <a href="https://wiki.archlinux.org/title/Main_page" class="split">Arch Wiki</a>
             <a href="https://archlinux.org/packages/" class="split">Arch Package Search</a>
             <a href="https://aur.archlinux.org/packages" class="split">Arch User Repository</a>
         </nav>
-    </header>
+        <slot />
+    </div>
+
+
 </template>
 
 <style scoped>

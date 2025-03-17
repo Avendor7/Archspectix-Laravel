@@ -1,4 +1,6 @@
 <template>
+    <Layout>
+
     <main class="flex-col-center">
 
 
@@ -40,13 +42,16 @@
         <div v-else-if="isLoading">Loading...</div>
         <div v-else></div>
     </main>
+    </Layout>
+
 </template>
 
 <script setup lang="ts">
+import Layout from './Layout.vue'
 import {ref, onMounted} from "vue";
 
 import axios from "axios";
-import ColorPicker from "./ColorPicker.vue";
+import ColorPicker from "../Components/ColorPicker.vue";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import { faGear } from '@fortawesome/free-solid-svg-icons/faGear'
 
