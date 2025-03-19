@@ -2,12 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
+use GuzzleHttp\Exception\ConnectException;
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+
 class ArchPackageController extends Controller
 {
     public function index()
     {
-
+        // Implementation needed
     }
+
     public function searchAUR(Request $request): JsonResponse
     {
         $value = $request->query('value');
@@ -17,10 +26,13 @@ class ArchPackageController extends Controller
         }
 
         try {
-            $url = "https://aur.archlinux.org/rpc/v5/search/{$value}";
+            $url = "https://aur.archlinux.org/rpc/v5/search/$value";
             $response = Http::get($url);
             return response()->json($response->json());
-        } catch (\Exception $error) {
+        } catch (ConnectException $error) {
+            Log::error('Connection error', ['error' => $error->getMessage()]);
+            return response()->json(['error' => 'Connection error: ' . $error->getMessage()], 503);
+        } catch (Exception $error) {
             Log::error('Error', ['error' => $error->getMessage()]);
             return response()->json(['error' => $error->getMessage()], 500);
         }
@@ -38,10 +50,13 @@ class ArchPackageController extends Controller
         }
 
         try {
-            $url = "https://archlinux.org/packages/search/json/?q={$value}";
+            $url = "https://archlinux.org/packages/search/json/?q=$value";
             $response = Http::get($url);
             return response()->json($response->json());
-        } catch (\Exception $error) {
+        } catch (ConnectException $error) {
+            Log::error('Connection error', ['error' => $error->getMessage()]);
+            return response()->json(['error' => 'Connection error: ' . $error->getMessage()], 503);
+        } catch (Exception $error) {
             Log::error('Error', ['error' => $error->getMessage()]);
             return response()->json(['error' => $error->getMessage()], 500);
         }
@@ -60,20 +75,26 @@ class ArchPackageController extends Controller
 
         try {
             $alrData = $this->fetchALRData($value);
-        } catch (\Exception $error) {
+        } catch (ConnectException $error) {
+            Log::error('Connection error', ['error' => $error->getMessage()]);
+            return response()->json(['error' => 'Connection error: ' . $error->getMessage()], 503);
+        } catch (Exception $error) {
             Log::error('Error', ['error' => $error->getMessage()]);
             return response()->json(['error' => $error->getMessage()], 500);
         }
 
         try {
             $aurData = $this->fetchAURData($value);
-        } catch (\Exception $error) {
+        } catch (ConnectException $error) {
+            Log::error('Connection error', ['error' => $error->getMessage()]);
+            return response()->json(['error' => 'Connection error: ' . $error->getMessage()], 503);
+        } catch (Exception $error) {
             Log::error('Error', ['error' => $error->getMessage()]);
             return response()->json(['error' => $error->getMessage()], 500);
         }
 
-        Log::info("Search complete for: " . $value);
-        return response()->json($this->normalizeResults($alrData, $aurData), 200);
+        Log::info("Search complete for: $value");
+        return response()->json($this->normalizeResults($alrData, $aurData));
     }
 
     /**
@@ -90,7 +111,11 @@ class ArchPackageController extends Controller
         try {
             $data = $this->fetchALRPackageInfo($value);
             return response()->json($data);
-        } catch (\Exception $error) {
+        } catch (ConnectException $error) {
+            Log::error('Connection error', ['error' => $error->getMessage()]);
+            return response()->json(['error' => 'Connection error: ' . $error->getMessage()], 503);
+        } catch (Exception $error) {
+            Log::error('Error', ['error' => $error->getMessage()]);
             return response()->json(['error' => $error->getMessage()], 500);
         }
     }
@@ -115,82 +140,65 @@ class ArchPackageController extends Controller
             }
 
             return response()->json($data);
-        } catch (\Exception $error) {
+        } catch (ConnectException $error) {
+            Log::error('Connection error', ['error' => $error->getMessage()]);
+            return response()->json(['error' => 'Connection error: ' . $error->getMessage()], 503);
+        } catch (Exception $error) {
             Log::error('Error', ['error' => $error->getMessage()]);
             return response()->json(['error' => $error->getMessage()], 500);
         }
     }
 
     /**
-     * Fetch data from the ALR API
+     * Fetch data from ALR repository
+     * @throws ConnectionException
      */
-    private function fetchALRData(string $value): array
+    private function fetchALRData(string $value)
     {
-        $url = "https://archlinux.org/packages/search/json/?q={$value}";
-        $response = Http::get($url);
-
-        if ($response->failed()) {
-            throw new \Exception($response->status());
-        }
-
-        return $response->json();
+        $url = "https://archlinux.org/packages/search/json/?q=$value";
+        return Http::get($url)->json();
     }
 
     /**
-     * Fetch data from the AUR API
+     * Fetch data from AUR repository
+     * @throws ConnectionException
      */
-    private function fetchAURData(string $value): array
+    private function fetchAURData(string $value)
     {
-        $url = "https://aur.archlinux.org/rpc/v5/search/{$value}";
-        $response = Http::get($url);
-
-        if ($response->failed()) {
-            throw new \Exception($response->status());
-        }
-
-        return $response->json();
+        $url = "https://aur.archlinux.org/rpc/v5/search/$value";
+        return Http::get($url)->json();
     }
 
     /**
-     * Fetch package info from the AUR API
+     * Fetch package info from ALR repository
+     * @throws ConnectionException
      */
-    private function fetchAURPackageInfo(string $value): array
+    private function fetchALRPackageInfo(string $value)
     {
-        $url = "https://aur.archlinux.org/rpc/v5/info?arg={$value}";
-        $response = Http::get($url);
-
-        if ($response->failed()) {
-            throw new \Exception($response->status());
-        }
-
-        return $response->json();
+        $url = "https://archlinux.org/packages/search/json/?name=$value";
+        return Http::get($url)->json();
     }
 
     /**
-     * Fetch package info from the ALR API
+     * Fetch package info from AUR repository
+     * @throws ConnectionException
      */
-    private function fetchALRPackageInfo(string $value): array
+    private function fetchAURPackageInfo(string $value)
     {
-        $url = "https://archlinux.org/packages/{$value}/json/";
-        $response = Http::get($url);
-
-        if ($response->failed()) {
-            throw new \Exception($response->status());
-        }
-
-        return $response->json();
+        $url = "https://aur.archlinux.org/rpc/v5/info/$value";
+        return Http::get($url)->json();
     }
 
     /**
      * Convert epoch timestamp to ISO8601 format
      */
-    private function convertEpochToISO8601($epoch): ?string
+    private function convertEpochToISO8601($timestamp)
     {
-        if (!$epoch) {
+        if (!$timestamp) {
             return null;
         }
 
-        return date('c', $epoch);
+        return date('c', $timestamp);
     }
 
     /**
@@ -198,12 +206,10 @@ class ArchPackageController extends Controller
      */
     private function normalizeResults(array $alrData, array $aurData): array
     {
-        // Implementation would depend on the structure of $alrData and $aurData
-        // This is a placeholder for the normalization logic that was in the original code
+        // Implementation needed
         return [
-            'alr' => $alrData,
-            'aur' => $aurData
+            'alr' => $alrData['results'] ?? [],
+            'aur' => $aurData['results'] ?? []
         ];
     }
-
 }
