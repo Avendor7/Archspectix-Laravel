@@ -5,10 +5,7 @@
 
 
         <color-picker :isOpen="isModalOpened" @modal-close="closeModal"/>
-        <div class="inputContainer">
-            <input class="searchBox" type="query" v-model="query" :placeholder="'Search'" @keydown.enter="fetchData">
-            <FontAwesomeIcon @click="openModal" :icon="faGear" class="settingsIcon"/>
-        </div>
+
         <div v-if="hasLoaded" class="resource">
             <table>
                 <thead>
@@ -56,6 +53,7 @@ import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import { faGear } from '@fortawesome/free-solid-svg-icons/faGear'
 
 const data = ref<Result[]>([]);
+import { router } from '@inertiajs/vue3'
 
 const query = ref("");
 const isLoading = ref(false);
@@ -72,25 +70,8 @@ interface Result {
     flagged_date: Date;
 }
 
-function fetchData() {
-    isLoading.value = true;
-    //let url = import.meta.env.VITE_API_URL+"/search?value=" + query.value;
-    let url = "http://localhost:8002/api/search?value=" + query.value;
-    console.log(url);
-    axios
-        .get(url)
-        .then((response) => {
-            data.value = response.data;
-        })
-        .catch((error) => {
-            console.error(error);
-        })
-        .finally(() => {
-            isLoading.value = false;
-            hasLoaded.value = true;
-            //router.push({ name: 'home', query: { q: query.value } });
-        });
-}
+
+
 
 function formatDate(timestamp: Date) {
     return timestamp ? new Date(timestamp).toLocaleString('en-US', {
@@ -139,29 +120,4 @@ th {
     box-shadow: 0 25px 50px -12px var(--color-primary-shadow);
 }
 
-.searchBox {
-    border: 3px solid var(--color-primary);
-    font-size: 3rem;
-    border-radius: .5rem;
-    padding: .5rem 1rem;
-    margin: 20px auto;
-    font-family: inherit;
-    outline: none;
-    box-shadow: 0 20px 20px -20px var(--color-primary-shadow);
-    background: var(--color-background);
-    color: var(--color-text);
-}
-
-.inputContainer {
-    text-align: center;
-}
-.settingsIcon{
-    padding-left:10px;
-    height:40px;
-    width:40px;
-    color: var(--color-primary);
-}
-.settingsIcon:hover{
-    cursor: pointer;
-}
 </style>
