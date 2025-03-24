@@ -1,19 +1,21 @@
-<script setup lang="ts">
+<template>
+    <div class="inputContainer">
+    <input class="searchBox" type="query" v-model="query"
+           :placeholder="'Search'"
+           @keydown.enter="fetchData"/>
+    <FontAwesomeIcon @click="openModal" :icon="faGear"
+                     class="settingsIcon"/>
+    </div>
 
-import Layout from "./Layout.vue";
+</template>
+
+<script setup lang="ts">
 import {faGear} from "@fortawesome/free-solid-svg-icons/faGear";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import {router} from "@inertiajs/vue3";
-import {ref} from "vue";
+import {ref, type Ref} from "vue";
 
-const query = ref("");
-const isLoading = ref(false);
-const hasLoaded = ref(false);
-const isFocusing = ref(false);
-
-const data = ref<Result[]>([]);
-
-interface Result {
+export interface Result {
     source: string;
     name: string;
     version: string;
@@ -21,17 +23,25 @@ interface Result {
     last_updated_date: Date;
     flagged_date: Date;
 }
+
+const query: Ref<string> = ref("");
+const isLoading: Ref<boolean> = ref(false);
+const hasLoaded: Ref<boolean> = ref(false);
+const isFocusing: Ref<boolean> = ref(false);
+
+const data: Ref<Result[]> = ref([]);
+
 function fetchData() {
     isLoading.value = true;
 
     // Use Inertia router for page visits
     router.visit('/search', {
         method: 'get',
-        data: { value: query.value },
+    data: {value: query.value},
         preserveState: true,
         onSuccess: (page) => {
             // Access data from the response
-            data.value = page.props.results;
+      data.value = page.props.results as Result[];
             hasLoaded.value = true;
         },
         onFinish: () => {
@@ -41,17 +51,6 @@ function fetchData() {
 }
 
 </script>
-
-<template>
-    <Layout>
-        <div class="inputContainer">
-            <input class="searchBox" type="query" v-model="query" :placeholder="'Search'" @keydown.enter="fetchData">
-            <FontAwesomeIcon @click="openModal" :icon="faGear" class="settingsIcon"/>
-        </div>
-
-    </Layout>
-</template>
-
 <style scoped>
 
 .searchBox {

@@ -5,7 +5,7 @@
 
 
         <color-picker :isOpen="isModalOpened" @modal-close="closeModal"/>
-
+        <Search />
         <div v-if="hasLoaded" class="resource">
             <table>
                 <thead>
@@ -44,7 +44,8 @@
 </template>
 
 <script setup lang="ts">
-import Layout from './Layout.vue'
+import Layout from './Layout.vue';
+import Search from './Search.vue';
 import {ref, onMounted} from "vue";
 
 import axios from "axios";
