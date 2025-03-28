@@ -6,5 +6,4 @@ use App\Http\Controllers\SearchController;
 
     Route::get('/', [HomeController::class, 'index']);
 
-    Route::get('/search', [SearchController::class, 'index'])->name('search');
 
