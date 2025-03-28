@@ -44,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import Layout from './Layout.vue';
+import Layout from '../Layouts/Layout.vue';
 import Search from './Search.vue';
 import {ref, onMounted} from "vue";
 
