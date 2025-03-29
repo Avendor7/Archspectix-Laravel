@@ -11,7 +11,7 @@ class SearchController extends Controller
         $query = $request->input('value');
         $results = []; // Your search logic here
 
-        return Inertia::render('Search', [
+        return Inertia::render('SearchComponent', [
             'query' => $query,
             'results' => $results
         ]);

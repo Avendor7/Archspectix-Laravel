@@ -9,6 +9,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class ArchPackageController extends Controller
 {
@@ -39,7 +41,7 @@ class ArchPackageController extends Controller
     }
 
     /**
-     * Search the official Arch Linux repository
+     * SearchComponent the official Arch Linux repository
      */
     public function searchALR(Request $request): JsonResponse
     {
@@ -63,9 +65,9 @@ class ArchPackageController extends Controller
     }
 
     /**
-     * Search both AUR and ALR repositories and normalize results
+     * SearchComponent both AUR and ALR repositories and normalize results
      */
-    public function searchAll(Request $request): JsonResponse
+    public function searchAll(Request $request): Response
     {
         $value = $request->query('value');
 
@@ -93,8 +95,11 @@ class ArchPackageController extends Controller
             return response()->json(['error' => $error->getMessage()], 500);
         }
 
-        Log::info("Search complete for: $value");
-        return response()->json($this->normalizeResults($alrData, $aurData));
+        Log::info("SearchComponent complete for: $value");
+        //return response()->json();
+        return Inertia::render('SearchResultsComponent', [
+            'results' => $this->normalizeResults($alrData, $aurData)
+        ]);
     }
 
     /**

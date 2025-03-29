@@ -1,19 +1,18 @@
 <template>
     <div class="inputContainer">
     <input class="searchBox" type="query" v-model="query"
-           :placeholder="'Search'"
+           :placeholder="'SearchComponent'"
            @keydown.enter="fetchData"/>
     <FontAwesomeIcon @click="openModal" :icon="faGear"
                      class="settingsIcon"/>
     </div>
-
 </template>
 
 <script setup lang="ts">
-import {faGear} from "@fortawesome/free-solid-svg-icons/faGear";
-import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
-import {router} from "@inertiajs/vue3";
-import {ref, type Ref} from "vue";
+import { faGear } from "@fortawesome/free-solid-svg-icons/faGear";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { router } from "@inertiajs/vue3";
+import { ref, type Ref } from "vue";
 
 export interface Result {
     source: string;
@@ -26,33 +25,34 @@ export interface Result {
 
 const query: Ref<string> = ref("");
 const isLoading: Ref<boolean> = ref(false);
-const hasLoaded: Ref<boolean> = ref(false);
-const isFocusing: Ref<boolean> = ref(false);
 
-const data: Ref<Result[]> = ref([]);
+
+// Define the emit for openModal
+const emit = defineEmits(['openModal']);
 
 function fetchData() {
+    if (!query.value.trim()) {
+        return;
+    }
+
     isLoading.value = true;
 
-    // Use Inertia router for page visits
-    router.visit('/search', {
-        method: 'get',
-    data: {value: query.value},
-        preserveState: true,
-        onSuccess: (page) => {
-            // Access data from the response
-      data.value = page.props.results as Result[];
-            hasLoaded.value = true;
-        },
+    router.get('/search',
+        { value: query.value },
+        {
         onFinish: () => {
             isLoading.value = false;
-        }
-    });
+            },
+}
+    );
 }
 
+const openModal = () => {
+  emit('openModal');
+};
 </script>
-<style scoped>
 
+<style scoped>
 .searchBox {
     border: 3px solid var(--color-primary);
     font-size: 3rem;
