@@ -97,7 +97,7 @@ class ArchPackageController extends Controller
 
         Log::info("SearchComponent complete for: $value");
         //return response()->json();
-        return Inertia::render('SearchResultsComponent', [
+        return Inertia::render('Home', [
             'results' => $this->normalizeResults($alrData, $aurData)
         ]);
     }
@@ -207,14 +207,62 @@ class ArchPackageController extends Controller
     }
 
     /**
-     * Normalize results from both repositories
+     * Normalizes results from ALR and AUR data sources into a single array.
+     *
+     * Assumes input arrays ($alrData, $aurData) have a 'results' key
+     * containing an array of items (associative arrays or objects).
+     *
+     * @param array $alrData Associative array containing ALR results. Expected items keys: pkgname, pkgver, repo, description, last_update, flag_date.
+     * @param array $aurData Associative array containing AUR results. Expected items keys: Name, Version, Description, LastModified (epoch), OutOfDate (epoch).
+     * @return array An array of normalized result associative arrays.
      */
-    private function normalizeResults(array $alrData, array $aurData): array
-    {
-        // Implementation needed
-        return [
-            'alr' => $alrData['results'] ?? [],
-            'aur' => $aurData['results'] ?? []
-        ];
+    function normalizeResults(array $alrData, array $aurData): array {
+        $allResults = [];
+
+        // Process ALR results (Arch Linux Repositories)
+        // Use null coalescing operator (??) to safely access potentially missing keys
+        if (isset($alrData['results']) && is_array($alrData['results'])) {
+            foreach ($alrData['results'] as $result) {
+                // Ensure $result is an array (if decoding JSON, it usually is)
+                if (is_array($result)) {
+                    $allResults[] = [
+                        'name'              => $result['pkgname'] ?? null,
+                        'version'           => $result['pkgver'] ?? null,
+                        'repo'              => $result['repo'] ?? null,
+                        'source'            => "ALR",
+                        'description'       => $result['description'] ?? null,
+                        'last_updated_date' => $result['last_update'] ?? null, // Assuming already ISO string or similar
+                        'flagged_date'      => $result['flag_date'] ?? null    // Assuming already ISO string or similar
+                    ];
+                }
+            }
+        } else {
+            // Optional: Log a warning if expected data structure is not found
+            // error_log("Warning: 'results' key missing or not an array in alrData");
+        }
+
+
+        // Process AUR results (Arch User Repository)
+        if (isset($aurData['results']) && is_array($aurData['results'])) {
+            foreach ($aurData['results'] as $result) {
+                if (is_array($result)) {
+                    $allResults[] = [
+                        'name'              => $result['Name'] ?? null,
+                        'version'           => $result['Version'] ?? null,
+                        'repo'              => "", // Repo is typically not applicable or empty for AUR in this context
+                        'source'            => "AUR",
+                        'description'       => $result['Description'] ?? null,
+                        'last_updated_date' => $this->convertEpochToISO8601($result['LastModified'] ?? null),
+                        'flagged_date'      => $this->convertEpochToISO8601($result['OutOfDate'] ?? null)
+                    ];
+                }
+            }
+        } else {
+            // Optional: Log a warning if expected data structure is not found
+            // error_log("Warning: 'results' key missing or not an array in aurData");
+        }
+
+
+        return $allResults;
     }
 }

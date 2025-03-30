@@ -7,7 +7,7 @@
         <color-picker :isOpen="isModalOpened"  @modal-close="closeModal"/>
        </div>
         <SearchComponent @openModal="handleOpenModal" />
-
+        <SearchResultsComponent :data="props.results" />
     </main>
     </Layout>
 
@@ -16,13 +16,31 @@
 <script setup lang="ts">
 import Layout from '../Layouts/Layout.vue';
 import SearchComponent from '../Components/SearchComponent.vue';
-import {ref} from "vue";
+import {ref, onMounted, defineProps} from "vue";
 
 import ColorPicker from "../Components/ColorPicker.vue";
+import SearchResultsComponent from "../Components/SearchResultsComponent.vue";
 
+export interface Result {
+    source: string;
+    name: string;
+    version: string;
+    repo: string;
+    last_updated_date: Date;
+    flagged_date: Date;
+}
 
 const isModalOpened = ref(false);
 
+const props = defineProps<{
+    results: Result[];
+}>();
+
+
+
+onMounted(()    => {
+    console.log(props.results);
+})
 const closeModal = () => {
     isModalOpened.value = false;
 };
