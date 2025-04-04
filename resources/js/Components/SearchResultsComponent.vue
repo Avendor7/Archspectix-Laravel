@@ -15,8 +15,9 @@
             <tr v-for="result in data" :key="result.name">
                 <td>{{ result.source }}</td>
                 <td v-if="result.source == 'ALR'">
-                    <a href="https://google.ca">Google1</a>
-
+                    <Link href="/details" :data="{value: result.name}">
+                        {{result.name}}
+                    </Link>
                 </td>
                 <td v-else-if="result.source == 'AUR'">
                     <a href="https://google.ca">Google2</a>
@@ -33,7 +34,7 @@
 
 <script setup lang="ts">
 import {onMounted} from 'vue';
-
+import {Link, usePage} from "@inertiajs/vue3";
 import { defineProps } from 'vue';
 interface Result {
     source: string;
@@ -49,7 +50,7 @@ const props = defineProps<{
 }>();
 
 const { data } = props;
-
+const page = usePage();
 onMounted(()    => {
     console.log(data)
 })

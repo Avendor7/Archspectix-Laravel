@@ -76,8 +76,8 @@
 
 <script setup lang="ts">
 import { onBeforeMount, ref, computed } from "vue";
-import { useRoute } from "vue-router";
 import axios from "axios";
+
 
 interface PackageInfo {
     pkgname: string;
@@ -137,13 +137,16 @@ const data = ref<Data>({
 });
 
 const isLoading = ref(false);
-const route = useRoute();
-const query = String(route.params.query); // You can also use a type guard for better TypeScript support
-
+//const route = useRoute();
+//const query = String(route.params.query); // You can also use a type guard for better TypeScript support
+const props = defineProps<{
+    query: string
+}>();
 function fetchData() {
     isLoading.value = true;
-    console.log(query);
-    let url = import.meta.env.VITE_API_URL+"/alr/info?value=" + query;
+    console.log(props.query);
+    //let url = import.meta.env.VITE_API_URL+"/alr/info?value=" + query;
+    let url = "http://localhost:8001/api/alr/info?value="+props.query;
     console.log(url);
     axios
         .get(url)

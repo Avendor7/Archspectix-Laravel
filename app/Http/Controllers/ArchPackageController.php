@@ -115,6 +115,7 @@ class ArchPackageController extends Controller
 
         try {
             $data = $this->fetchALRPackageInfo($value);
+            \Log::debug("ALR data fetched for: $value", ['data' => $data]);
             return response()->json($data);
         } catch (ConnectException $error) {
             Log::error('Connection error', ['error' => $error->getMessage()]);
