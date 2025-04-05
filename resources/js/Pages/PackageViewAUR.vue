@@ -109,8 +109,8 @@ const props = defineProps<{
 }>();
 function fetchData() {
     isLoading.value = true;
-    //let url = import.meta.env.VITE_API_URL+"/aur/info?value=" + query;
-    let url = "http://localhost:8002/api/aur/info?value=" + props.query;
+    // Use relative URL to avoid port issues with php artisan serve
+    let url = "/api/aur/info?value=" + props.query;
 
     axios
         .get(url)
