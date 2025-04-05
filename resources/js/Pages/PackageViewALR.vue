@@ -146,7 +146,7 @@ function fetchData() {
     isLoading.value = true;
     console.log(props.query);
     //let url = import.meta.env.VITE_API_URL+"/alr/info?value=" + query;
-    let url = "http://localhost:8001/api/alr/info?value="+props.query;
+    let url = "http://localhost:8002/api/alr/info?value="+props.query;
     console.log(url);
     axios
         .get(url)

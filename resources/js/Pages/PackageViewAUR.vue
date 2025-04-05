@@ -22,7 +22,7 @@
                 </tr>
                 <tr>
                     <th>License</th>
-                    <td><span v-for="licence in data.results[0].License">{{licence}}</span></td>
+                    <td><span v-for="(licence, index) in data.results[0].License" :key="index">{{licence}}</span></td>
                 </tr>
                 <tr>
                     <th>Maintainer</th>
@@ -63,7 +63,6 @@
 
 <script setup lang="ts">
 import { onBeforeMount, ref } from 'vue';
-import { useRoute } from 'vue-router';
 import axios from "axios";
 
 interface Data {
@@ -103,12 +102,16 @@ const data = ref<Data>({
 });
 
 const isLoading = ref(false);
-const route = useRoute();
-const query = String(route.params.query); // You can also use a type guard for better TypeScript support
-
+//const route = useRoute();
+//const query = String(route.params.query); // You can also use a type guard for better TypeScript support
+const props = defineProps<{
+    query: string
+}>();
 function fetchData() {
     isLoading.value = true;
-    let url = import.meta.env.VITE_API_URL+"/aur/info?value=" + query;
+    //let url = import.meta.env.VITE_API_URL+"/aur/info?value=" + query;
+    let url = "http://localhost:8002/api/aur/info?value=" + props.query;
+
     axios
         .get(url)
         .then((response) => {

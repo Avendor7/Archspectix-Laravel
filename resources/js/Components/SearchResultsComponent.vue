@@ -15,12 +15,14 @@
             <tr v-for="result in data" :key="result.name">
                 <td>{{ result.source }}</td>
                 <td v-if="result.source == 'ALR'">
-                    <Link href="/details" :data="{value: result.name}">
+                    <Link href="/alr-details" :data="{value: result.name}">
                         {{result.name}}
                     </Link>
                 </td>
                 <td v-else-if="result.source == 'AUR'">
-                    <a href="https://google.ca">Google2</a>
+                    <Link href="/aur-details" :data="{value: result.name}">
+                        {{result.name}}
+                    </Link>
                 </td>
                 <td>{{ result.version }}</td>
                 <td>{{ result.repo }}</td>
