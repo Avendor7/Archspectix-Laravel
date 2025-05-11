@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
-import NavComponent from "../Components/NavComponent.vue";
+import NavComponent from "../components/NavComponent.vue";
 </script>
 
 <template>

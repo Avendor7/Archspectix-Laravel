@@ -15,11 +15,11 @@
 
 <script setup lang="ts">
 import Layout from '../Layouts/Layout.vue';
-import SearchComponent from '../Components/SearchComponent.vue';
+import SearchComponent from '../components/SearchComponent.vue';
 import {ref, onMounted, defineProps} from "vue";
 
-import ColorPicker from "../Components/ColorPicker.vue";
-import SearchResultsComponent from "../Components/SearchResultsComponent.vue";
+import ColorPicker from "../components/ColorPicker.vue";
+import SearchResultsComponent from "../components/SearchResultsComponent.vue";
 
 export interface Result {
     source: string;
