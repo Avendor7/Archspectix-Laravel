@@ -2,7 +2,7 @@
     <Layout>
 
     <main class="flex-col-center">
-
+        <Button>Hello World</Button>
        <div class="flex-col-center">
         <color-picker :isOpen="isModalOpened"  @modal-close="closeModal"/>
        </div>
@@ -20,6 +20,7 @@ import {ref, onMounted, defineProps} from "vue";
 
 import ColorPicker from "../components/ColorPicker.vue";
 import SearchResultsComponent from "../components/SearchResultsComponent.vue";
+import {Button} from "@/components/ui/button";
 
 export interface Result {
     source: string;
