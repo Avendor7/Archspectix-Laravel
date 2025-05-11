@@ -63,9 +63,7 @@
             "dont-discover": []
         },
         "patches": {
-            "nunomaduro/termwind": {
-                "Patches issue with libxml": "./patches/termwind.patch"
-            }
+
         }
     },
     "config": {
