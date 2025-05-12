@@ -1,15 +1,19 @@
-import { defineConfig } from "eslint/config";
-import globals from "globals";
-import js from "@eslint/js";
-import tseslint from "typescript-eslint";
-import pluginVue from "eslint-plugin-vue";
+import prettier from 'eslint-config-prettier';
+import vue from 'eslint-plugin-vue';
 
+import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescript';
 
-export default defineConfig([
-  { files: ["**/*.{js,mjs,cjs,ts,vue}"] },
-  { files: ["**/*.{js,mjs,cjs,ts,vue}"], languageOptions: { globals: globals.browser } },
-  { files: ["**/*.{js,mjs,cjs,ts,vue}"], plugins: { js }, extends: ["js/recommended"] },
-  tseslint.configs.recommended,
-  pluginVue.configs["flat/essential"],
-  { files: ["**/*.vue"], languageOptions: { parserOptions: { parser: tseslint.parser } } },
-]);
+export default defineConfigWithVueTs(
+    vue.configs['flat/essential'],
+    vueTsConfigs.recommended,
+    {
+        ignores: ['vendor', 'node_modules', 'public', 'bootstrap/ssr', 'tailwind.config.js', 'resources/js/components/ui/*'],
+    },
+    {
+        rules: {
+            'vue/multi-word-component-names': 'off',
+            '@typescript-eslint/no-explicit-any': 'off',
+        },
+    },
+    prettier,
+);

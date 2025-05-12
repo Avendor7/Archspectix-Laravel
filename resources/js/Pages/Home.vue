@@ -1,26 +1,24 @@
 <template>
     <Layout>
-
-    <main class="flex-col-center">
-        <Button>Hello World</Button>
-       <div class="flex-col-center">
-        <color-picker :isOpen="isModalOpened"  @modal-close="closeModal"/>
-       </div>
-        <SearchComponent @openModal="handleOpenModal" />
-        <SearchResultsComponent :data="props.results" />
-    </main>
+        <main class="flex-col-center">
+            <Button>Hello World</Button>
+            <div class="flex-col-center">
+                <color-picker :isOpen="isModalOpened" @modal-close="closeModal" />
+            </div>
+            <SearchComponent @openModal="handleOpenModal" />
+            <SearchResultsComponent :data="props.results" />
+        </main>
     </Layout>
-
 </template>
 
 <script setup lang="ts">
 import Layout from '../Layouts/Layout.vue';
 import SearchComponent from '../components/SearchComponent.vue';
-import {ref, onMounted, defineProps} from "vue";
+import { ref, onMounted, defineProps } from 'vue';
 
-import ColorPicker from "../components/ColorPicker.vue";
-import SearchResultsComponent from "../components/SearchResultsComponent.vue";
-import {Button} from "@/components/ui/button";
+import ColorPicker from '../components/ColorPicker.vue';
+import SearchResultsComponent from '../components/SearchResultsComponent.vue';
+import { Button } from '@/components/ui/button';
 
 export interface Result {
     source: string;
@@ -37,11 +35,9 @@ const props = defineProps<{
     results: Result[];
 }>();
 
-
-
-onMounted(()    => {
+onMounted(() => {
     console.log(props.results);
-})
+});
 const closeModal = () => {
     isModalOpened.value = false;
 };
@@ -49,7 +45,6 @@ const closeModal = () => {
 const handleOpenModal = () => {
     isModalOpened.value = true;
 };
-
 </script>
 
 <style scoped>
@@ -67,6 +62,4 @@ td {
 th {
     background-color: #010101;
 }
-
-
 </style>

@@ -1,18 +1,15 @@
 <template>
     <div class="inputContainer">
-    <input class="searchBox" type="query" v-model="query"
-           :placeholder="'SearchComponent'"
-           @keydown.enter="fetchData"/>
-    <FontAwesomeIcon @click="openModal" :icon="faGear"
-                     class="settingsIcon"/>
+        <input class="searchBox" type="query" v-model="query" :placeholder="'SearchComponent'" @keydown.enter="fetchData" />
+        <FontAwesomeIcon @click="openModal" :icon="faGear" class="settingsIcon" />
     </div>
 </template>
 
 <script setup lang="ts">
-import { faGear } from "@fortawesome/free-solid-svg-icons/faGear";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { router } from "@inertiajs/vue3";
-import { ref, type Ref } from "vue";
+import { faGear } from '@fortawesome/free-solid-svg-icons/faGear';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { router } from '@inertiajs/vue3';
+import { ref, type Ref } from 'vue';
 
 export interface Result {
     source: string;
@@ -23,9 +20,8 @@ export interface Result {
     flagged_date: Date;
 }
 
-const query: Ref<string> = ref("");
+const query: Ref<string> = ref('');
 const isLoading: Ref<boolean> = ref(false);
-
 
 // Define the emit for openModal
 const emit = defineEmits(['openModal']);
@@ -37,18 +33,19 @@ function fetchData() {
 
     isLoading.value = true;
 
-    router.get('/search',
+    router.get(
+        '/search',
         { value: query.value },
         {
-        onFinish: () => {
-            isLoading.value = false;
+            onFinish: () => {
+                isLoading.value = false;
             },
-}
+        },
     );
 }
 
 const openModal = () => {
-  emit('openModal');
+    emit('openModal');
 };
 </script>
 
@@ -56,8 +53,8 @@ const openModal = () => {
 .searchBox {
     border: 3px solid var(--color-primary);
     font-size: 3rem;
-    border-radius: .5rem;
-    padding: .5rem 1rem;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
     margin: 20px auto;
     font-family: inherit;
     outline: none;
@@ -69,13 +66,13 @@ const openModal = () => {
 .inputContainer {
     text-align: center;
 }
-.settingsIcon{
-    padding-left:10px;
-    height:40px;
-    width:40px;
+.settingsIcon {
+    padding-left: 10px;
+    height: 40px;
+    width: 40px;
     color: var(--color-primary);
 }
-.settingsIcon:hover{
+.settingsIcon:hover {
     cursor: pointer;
 }
 </style>

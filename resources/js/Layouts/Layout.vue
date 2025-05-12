@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
-import NavComponent from "../components/NavComponent.vue";
+import NavComponent from '../components/NavComponent.vue';
 </script>
 
 <template>
@@ -9,10 +9,6 @@ import NavComponent from "../components/NavComponent.vue";
         <NavComponent />
         <slot />
     </div>
-
-
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

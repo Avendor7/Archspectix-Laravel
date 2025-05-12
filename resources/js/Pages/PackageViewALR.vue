@@ -14,7 +14,9 @@
                     </tr>
                     <tr>
                         <th>URL</th>
-                        <td><a :href="data.results[0].url">{{ data.results[0].url }}</a></td>
+                        <td>
+                            <a :href="data.results[0].url">{{ data.results[0].url }}</a>
+                        </td>
                     </tr>
                     <tr>
                         <th>License(s)</th>
@@ -46,7 +48,11 @@
                 <h2>Dependencies</h2>
                 <table>
                     <tbody>
-                        <tr v-for="(value, index) in data.results[0].depends" :key="index">{{ value }}</tr>
+                        <tr v-for="(value, index) in data.results[0].depends" :key="index">
+                            {{
+                                value
+                            }}
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -55,7 +61,11 @@
                 <h2>Optional Dependencies</h2>
                 <table>
                     <tbody>
-                        <tr v-for="(value, index) in data.results[0].optdepends" :key="index">{{ value }}</tr>
+                        <tr v-for="(value, index) in data.results[0].optdepends" :key="index">
+                            {{
+                                value
+                            }}
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -64,20 +74,21 @@
                 <h2>Required by</h2>
                 <table>
                     <tbody>
-                        <tr v-for="(value, index) in data.results[0].makedepends" :key="index">{{ value }}</tr>
+                        <tr v-for="(value, index) in data.results[0].makedepends" :key="index">
+                            {{
+                                value
+                            }}
+                        </tr>
                     </tbody>
                 </table>
             </div>
-
         </div>
-
     </div>
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, ref, computed } from "vue";
-import axios from "axios";
-
+import { onBeforeMount, ref, computed } from 'vue';
+import axios from 'axios';
 
 interface PackageInfo {
     pkgname: string;
@@ -117,14 +128,14 @@ interface OptDependency {
     name: string;
     description: string;
 }
-interface Data{
-    version: number,
-    limit: number,
-    valid: boolean,
-    results: PackageInfo[],
-    type: string,
-    num_pages: number,
-    page: number
+interface Data {
+    version: number;
+    limit: number;
+    valid: boolean;
+    results: PackageInfo[];
+    type: string;
+    num_pages: number;
+    page: number;
 }
 const data = ref<Data>({
     version: 0,
@@ -132,21 +143,21 @@ const data = ref<Data>({
     valid: false,
     results: [],
     type: '',
-    num_pages:  0,
-    page: 0
+    num_pages: 0,
+    page: 0,
 });
 
 const isLoading = ref(false);
 //const route = useRoute();
 //const query = String(route.params.query); // You can also use a type guard for better TypeScript support
 const props = defineProps<{
-    query: string
+    query: string;
 }>();
 function fetchData() {
     isLoading.value = true;
     console.log(props.query);
     // Use relative URL to avoid port issues with php artisan serve
-    let url = "/api/alr/info?value=" + props.query;
+    const url = '/api/alr/info?value=' + props.query;
     console.log(url);
     axios
         .get(url)
@@ -177,7 +188,6 @@ const formatInstalledSize = computed(() => {
 const formatSize = (size: number) => {
     return (size / Math.pow(2, 10)).toFixed(2) + ' KB';
 };
-
 </script>
 
 <style scoped>
@@ -192,7 +202,6 @@ table {
 
 th,
 td {
-
     border: 1px solid var(--color-primary);
     padding: 10px;
     text-align: left;
@@ -206,10 +215,9 @@ td {
 
 @media (prefers-color-scheme: light) {
     th {
-        background-color: #CCC;
+        background-color: #ccc;
     }
 }
-
 
 .container {
     width: 50%;
@@ -222,7 +230,6 @@ td {
     display: flex;
     flex-wrap: nowrap;
     gap: 10px;
-
 }
 
 .column {

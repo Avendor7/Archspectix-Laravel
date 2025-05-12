@@ -2,41 +2,41 @@
     <div class="resource">
         <table>
             <thead>
-            <tr>
-                <th>Source</th>
-                <th>Name</th>
-                <th>Version</th>
-                <th>Repository</th>
-                <th>Last Updated Date</th>
-                <th>Flagged Date</th>
-            </tr>
+                <tr>
+                    <th>Source</th>
+                    <th>Name</th>
+                    <th>Version</th>
+                    <th>Repository</th>
+                    <th>Last Updated Date</th>
+                    <th>Flagged Date</th>
+                </tr>
             </thead>
             <tbody>
-            <tr v-for="result in data" :key="result.name">
-                <td>{{ result.source }}</td>
-                <td v-if="result.source == 'ALR'">
-                    <Link href="/alr-details" :data="{value: result.name}">
-                        {{result.name}}
-                    </Link>
-                </td>
-                <td v-else-if="result.source == 'AUR'">
-                    <Link href="/aur-details" :data="{value: result.name}">
-                        {{result.name}}
-                    </Link>
-                </td>
-                <td>{{ result.version }}</td>
-                <td>{{ result.repo }}</td>
-                <td>{{ formatDate(result.last_updated_date) }}</td>
-                <td>{{ formatDate(result.flagged_date) }}</td>
-            </tr>
+                <tr v-for="result in data" :key="result.name">
+                    <td>{{ result.source }}</td>
+                    <td v-if="result.source == 'ALR'">
+                        <Link href="/alr-details" :data="{ value: result.name }">
+                            {{ result.name }}
+                        </Link>
+                    </td>
+                    <td v-else-if="result.source == 'AUR'">
+                        <Link href="/aur-details" :data="{ value: result.name }">
+                            {{ result.name }}
+                        </Link>
+                    </td>
+                    <td>{{ result.version }}</td>
+                    <td>{{ result.repo }}</td>
+                    <td>{{ formatDate(result.last_updated_date) }}</td>
+                    <td>{{ formatDate(result.flagged_date) }}</td>
+                </tr>
             </tbody>
         </table>
     </div>
 </template>
 
 <script setup lang="ts">
-import {onMounted} from 'vue';
-import {Link, usePage} from "@inertiajs/vue3";
+import { onMounted } from 'vue';
+import { Link } from '@inertiajs/vue3';
 import { defineProps } from 'vue';
 interface Result {
     source: string;
@@ -52,19 +52,21 @@ const props = defineProps<{
 }>();
 
 const { data } = props;
-const page = usePage();
-onMounted(()    => {
-    console.log(data)
-})
+
+onMounted(() => {
+    console.log(data);
+});
 
 function formatDate(timestamp: Date) {
-    return timestamp ? new Date(timestamp).toLocaleString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    }) :"";
+    return timestamp
+        ? new Date(timestamp).toLocaleString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+          })
+        : '';
 }
 </script>
 
