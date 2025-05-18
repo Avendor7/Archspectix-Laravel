@@ -5,7 +5,7 @@
                 <color-picker :isOpen="isModalOpened" @modal-close="closeModal" />
             </div>
             <SearchComponent @openModal="handleOpenModal" />
-            <SearchResultsComponent :data="props.results" />
+            <SearchResultsComponent v-if="props.results" :data="props.results" />
         </main>
     </Layout>
 </template>
