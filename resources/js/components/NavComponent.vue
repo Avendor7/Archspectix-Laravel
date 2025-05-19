@@ -1,7 +1,6 @@
 <template>
     <nav>
-        <button>Button</button>
-        <button>Button</button>
+        <span class="title"><a href="/">Archspectix</a></span>
         <a href="https://archlinux.org" class="split">Arch Linux</a>
         <a href="https://wiki.archlinux.org/title/Main_page" class="split">Arch Wiki</a>
         <a href="https://archlinux.org/packages/" class="split">Arch Package Search</a>
@@ -30,5 +29,11 @@ nav a:last-of-type {
 
 nav a.split {
     float: right;
+}
+.title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    text-decoration: none;
 }
 </style>
