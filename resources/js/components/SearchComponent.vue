@@ -1,13 +1,10 @@
 <template>
-    <div class="inputContainer">
+    <div class="input">
         <input class="searchBox" type="query" v-model="query" :placeholder="'SearchComponent'" @keydown.enter="fetchData" />
-        <FontAwesomeIcon @click="openModal" :icon="faGear" class="settingsIcon" />
     </div>
 </template>
 
 <script setup lang="ts">
-import { faGear } from '@fortawesome/free-solid-svg-icons/faGear';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { router } from '@inertiajs/vue3';
 import { ref, type Ref } from 'vue';
 
@@ -22,9 +19,6 @@ export interface Result {
 
 const query: Ref<string> = ref('');
 const isLoading: Ref<boolean> = ref(false);
-
-// Define the emit for openModal
-const emit = defineEmits(['openModal']);
 
 function fetchData() {
     if (!query.value.trim()) {
@@ -43,10 +37,6 @@ function fetchData() {
         },
     );
 }
-
-const openModal = () => {
-    emit('openModal');
-};
 </script>
 
 <style scoped>
@@ -63,16 +53,7 @@ const openModal = () => {
     color: var(--color-text);
 }
 
-.inputContainer {
+.input {
     text-align: center;
-}
-.settingsIcon {
-    padding-left: 10px;
-    height: 40px;
-    width: 40px;
-    color: var(--color-primary);
-}
-.settingsIcon:hover {
-    cursor: pointer;
 }
 </style>

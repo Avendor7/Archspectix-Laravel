@@ -1,73 +1,76 @@
 <template>
-    <div v-if="!isLoading">
-        <div class="container">
-            <h1>{{ data.results[0].Name }}</h1>
-            <table class="resource">
-                <tbody>
-                    <tr>
-                        <th scope="col">Name</th>
-                        <td>{{ data.results[0].Name }}</td>
-                    </tr>
-                    <tr>
-                        <th>Version</th>
-                        <td>{{ data.results[0].Version }}</td>
-                    </tr>
-                    <tr>
-                        <th>URL</th>
-                        <td>
-                            <a :href="data.results[0].URL">{{ data.results[0].URL }}</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Description</th>
-                        <td>{{ data.results[0].Description }}</td>
-                    </tr>
-                    <tr>
-                        <th>License</th>
-                        <td>
-                            <span v-for="(licence, index) in data.results[0].License" :key="index">{{ licence }}</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Maintainer</th>
-                        <td>{{ data.results[0].Maintainer }}</td>
-                    </tr>
-                    <tr>
-                        <th>Number of Votes</th>
-                        <td>{{ data.results[0].NumVotes }}</td>
-                    </tr>
-                    <tr>
-                        <th>Last Modified</th>
-                        <td>{{ formatDate(data.results[0].LastModified) }}</td>
-                    </tr>
-                    <tr>
-                        <th>Out of Date</th>
-                        <td>{{ formatDate(data.results[0].OutOfDate) }}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="col-container">
-            <div class="column">
-                <h2>Dependencies</h2>
-                <ul>
-                    <li v-for="(value, index) in data.results[0].Depends" :key="index">{{ value }}</li>
-                </ul>
+    <SearchLayout>
+        <div v-if="!isLoading">
+            <div class="container">
+                <h1>{{ data.results[0].Name }}</h1>
+                <table class="resource">
+                    <tbody>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <td>{{ data.results[0].Name }}</td>
+                        </tr>
+                        <tr>
+                            <th>Version</th>
+                            <td>{{ data.results[0].Version }}</td>
+                        </tr>
+                        <tr>
+                            <th>URL</th>
+                            <td>
+                                <a :href="data.results[0].URL">{{ data.results[0].URL }}</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Description</th>
+                            <td>{{ data.results[0].Description }}</td>
+                        </tr>
+                        <tr>
+                            <th>License</th>
+                            <td>
+                                <span v-for="(licence, index) in data.results[0].License" :key="index">{{ licence }}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Maintainer</th>
+                            <td>{{ data.results[0].Maintainer }}</td>
+                        </tr>
+                        <tr>
+                            <th>Number of Votes</th>
+                            <td>{{ data.results[0].NumVotes }}</td>
+                        </tr>
+                        <tr>
+                            <th>Last Modified</th>
+                            <td>{{ formatDate(data.results[0].LastModified) }}</td>
+                        </tr>
+                        <tr>
+                            <th>Out of Date</th>
+                            <td>{{ formatDate(data.results[0].OutOfDate) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
+            <div class="col-container">
+                <div class="column">
+                    <h2>Dependencies</h2>
+                    <ul>
+                        <li v-for="(value, index) in data.results[0].Depends" :key="index">{{ value }}</li>
+                    </ul>
+                </div>
 
-            <div class="column">
-                <h2>Make Dependencies</h2>
-                <ul>
-                    <li v-for="(value, index) in data.results[0].MakeDepends" :key="index">{{ value }}</li>
-                </ul>
+                <div class="column">
+                    <h2>Make Dependencies</h2>
+                    <ul>
+                        <li v-for="(value, index) in data.results[0].MakeDepends" :key="index">{{ value }}</li>
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
+    </SearchLayout>
 </template>
 
 <script setup lang="ts">
 import { onBeforeMount, ref } from 'vue';
 import axios from 'axios';
+import SearchLayout from '@/Layouts/SearchLayout.vue';
 
 interface Data {
     resultcount: number;

@@ -1,94 +1,97 @@
 <template>
-    <div v-if="!isLoading">
-        <div class="container">
-            <h1>{{ data.results[0].pkgname }}</h1>
-            <table class="resource">
-                <tbody>
-                    <tr>
-                        <th>Name</th>
-                        <td>{{ data.results[0].pkgname }}</td>
-                    </tr>
-                    <tr>
-                        <th>Version</th>
-                        <td>{{ data.results[0].pkgver }}</td>
-                    </tr>
-                    <tr>
-                        <th>URL</th>
-                        <td>
-                            <a :href="data.results[0].url">{{ data.results[0].url }}</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>License(s)</th>
-                        <td>{{ data.results[0].licenses }}</td>
-                    </tr>
-                    <tr>
-                        <th>Package Size</th>
-                        <td>{{ formatCompressedSize }}</td>
-                    </tr>
-                    <tr>
-                        <th>Installed Size</th>
-                        <td>{{ formatInstalledSize }}</td>
-                    </tr>
-                    <tr>
-                        <th>Build Date</th>
-                        <td>{{ data.results[0].build_date }}</td>
-                    </tr>
-                    <tr>
-                        <!-- TODO possible to link or something here? -->
-                        <th>Maintainers</th>
-                        <td>{{ data.results[0].maintainers }}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <!-- TODO This should probably be in components somehow. Formatting on the text also necessary -->
-        <div class="col-container">
-            <div class="column">
-                <h2>Dependencies</h2>
-                <table>
+    <SearchLayout>
+        <div v-if="!isLoading">
+            <div class="container">
+                <h1>{{ data.results[0].pkgname }}</h1>
+                <table class="resource">
                     <tbody>
-                        <tr v-for="(value, index) in data.results[0].depends" :key="index">
-                            {{
-                                value
-                            }}
+                        <tr>
+                            <th>Name</th>
+                            <td>{{ data.results[0].pkgname }}</td>
+                        </tr>
+                        <tr>
+                            <th>Version</th>
+                            <td>{{ data.results[0].pkgver }}</td>
+                        </tr>
+                        <tr>
+                            <th>URL</th>
+                            <td>
+                                <a :href="data.results[0].url">{{ data.results[0].url }}</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>License(s)</th>
+                            <td>{{ data.results[0].licenses }}</td>
+                        </tr>
+                        <tr>
+                            <th>Package Size</th>
+                            <td>{{ formatCompressedSize }}</td>
+                        </tr>
+                        <tr>
+                            <th>Installed Size</th>
+                            <td>{{ formatInstalledSize }}</td>
+                        </tr>
+                        <tr>
+                            <th>Build Date</th>
+                            <td>{{ data.results[0].build_date }}</td>
+                        </tr>
+                        <tr>
+                            <!-- TODO possible to link or something here? -->
+                            <th>Maintainers</th>
+                            <td>{{ data.results[0].maintainers }}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+            <!-- TODO This should probably be in components somehow. Formatting on the text also necessary -->
+            <div class="col-container">
+                <div class="column">
+                    <h2>Dependencies</h2>
+                    <table>
+                        <tbody>
+                            <tr v-for="(value, index) in data.results[0].depends" :key="index">
+                                {{
+                                    value
+                                }}
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-            <div class="column">
-                <h2>Optional Dependencies</h2>
-                <table>
-                    <tbody>
-                        <tr v-for="(value, index) in data.results[0].optdepends" :key="index">
-                            {{
-                                value
-                            }}
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                <div class="column">
+                    <h2>Optional Dependencies</h2>
+                    <table>
+                        <tbody>
+                            <tr v-for="(value, index) in data.results[0].optdepends" :key="index">
+                                {{
+                                    value
+                                }}
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-            <div class="column">
-                <h2>Required by</h2>
-                <table>
-                    <tbody>
-                        <tr v-for="(value, index) in data.results[0].makedepends" :key="index">
-                            {{
-                                value
-                            }}
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="column">
+                    <h2>Required by</h2>
+                    <table>
+                        <tbody>
+                            <tr v-for="(value, index) in data.results[0].makedepends" :key="index">
+                                {{
+                                    value
+                                }}
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
+    </SearchLayout>
 </template>
 
 <script setup lang="ts">
 import { onBeforeMount, ref, computed } from 'vue';
 import axios from 'axios';
+import SearchLayout from '@/Layouts/SearchLayout.vue';
 
 interface PackageInfo {
     pkgname: string;

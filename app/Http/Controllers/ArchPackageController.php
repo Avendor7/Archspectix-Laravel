@@ -16,7 +16,7 @@ class ArchPackageController extends Controller
 {
     public function index()
     {
-        // Implementation needed
+
     }
 
     public function searchAUR(Request $request): JsonResponse
@@ -70,7 +70,6 @@ class ArchPackageController extends Controller
     public function searchAll(Request $request): Response
     {
         $value = $request->query('value');
-
         if (!$value) {
             return response()->json(['error' => 'Value parameter is required'], 400);
         }
@@ -95,10 +94,8 @@ class ArchPackageController extends Controller
             return response()->json(['error' => $error->getMessage()], 500);
         }
 
-        Log::info("SearchComponent complete for: $value");
-        //return response()->json();
-        return Inertia::render('Home', [
-            'results' => $this->normalizeResults($alrData, $aurData)
+        return Inertia::render('SearchResults', [
+            'data' => $this->normalizeResults($alrData, $aurData)
         ]);
     }
 

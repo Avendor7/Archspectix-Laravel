@@ -1,48 +1,11 @@
 <template>
-    <Layout>
-        <main class="flex-col-center">
-            <div class="flex-col-center">
-                <color-picker :isOpen="isModalOpened" @modal-close="closeModal" />
-            </div>
-            <SearchComponent @openModal="handleOpenModal" />
-            <SearchResultsComponent v-if="props.results" :data="props.results" />
-        </main>
-    </Layout>
+    <SearchLayout>
+        <main class="flex-col-center"></main>
+    </SearchLayout>
 </template>
 
 <script setup lang="ts">
-import Layout from '../Layouts/Layout.vue';
-import SearchComponent from '../components/SearchComponent.vue';
-import { ref, onMounted, defineProps } from 'vue';
-
-import ColorPicker from '../components/ColorPicker.vue';
-import SearchResultsComponent from '../components/SearchResultsComponent.vue';
-
-export interface Result {
-    source: string;
-    name: string;
-    version: string;
-    repo: string;
-    last_updated_date: Date;
-    flagged_date: Date;
-}
-
-const isModalOpened = ref(false);
-
-const props = defineProps<{
-    results: Result[];
-}>();
-
-onMounted(() => {
-    console.log(props.results);
-});
-const closeModal = () => {
-    isModalOpened.value = false;
-};
-
-const handleOpenModal = () => {
-    isModalOpened.value = true;
-};
+import SearchLayout from '@/Layouts/SearchLayout.vue';
 </script>
 
 <style scoped>
