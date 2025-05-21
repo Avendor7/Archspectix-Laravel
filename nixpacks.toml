@@ -1,7 +1,14 @@
-[phases.postbuild]
-cmds = [
-    "php /app/artisan key:generate",
-    "php /app/artisan optimize:clear",
-    "php /app/artisan migrate --force",
-]
-dependsOn = ["build"]
+[[static]]
+  path = "public"
+
+[[build]]
+  command = "./artisan key:generate && ./artisan migrate --force"
+  ready_output = "Laravel development server started on http://localhost"
+
+[[install]]
+  commands = [
+    "composer install --no-dev --optimize-autoloader",
+  ]
+
+[[start]]
+  command = "/usr/sbin/nginx -g 'daemon off;'"
