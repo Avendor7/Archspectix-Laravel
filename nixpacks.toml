@@ -1,5 +1,5 @@
    [phases.setup]
-   nixPkgs = ["php81", "php81Extensions.sqlite3", "sqlite", "nodejs", "npm"]
+   nixPkgs = ["php82", "php82Extensions.sqlite3", "sqlite", "nodejs", "npm"]
 
    [phases.install]
    cmds = [
