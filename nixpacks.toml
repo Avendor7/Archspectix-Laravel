@@ -1,35 +1,7 @@
-   [phases.setup]
-   nixPkgs = ["php82", "php82Extensions.sqlite3", "sqlite", "nodejs", "npm"]
-
-   [phases.install]
-   cmds = [
-     "composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader",
-     "npm ci",
-     "npm run build"
-   ]
-
-   [phases.build]
-   cmds = [
-     "mkdir -p storage/framework/{sessions,views,cache}",
-     "mkdir -p storage/app/public",
-     "chmod -R 777 storage",
-     "chmod -R 777 bootstrap/cache",
-     "touch database/database.sqlite",
-     "chmod 666 database/database.sqlite"
-   ]
-
-   [start]
-   cmd = """
-   php artisan key:generate --force && \
-   php artisan migrate --force && \
-   php artisan serve --host=0.0.0.0 --port=$PORT
-   """
-
-   [variables]
-   APP_ENV = "production"
-   APP_DEBUG = "false"
-   DB_CONNECTION = "sqlite"
-   DB_DATABASE = "/app/database/database.sqlite"
-   CACHE_DRIVER = "file"
-   SESSION_DRIVER = "file"
-   QUEUE_DRIVER = "sync"
+[phases.postbuild]
+cmds = [
+    "php /app/artisan key:generate",
+    "php /app/artisan optimize:clear",
+    "php /app/artisan migrate --force",
+]
+dependsOn = ["build"]
