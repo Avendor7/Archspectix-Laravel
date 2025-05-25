@@ -1,21 +1,12 @@
 <template>
     <div class="input">
-        <input class="searchBox" type="query" v-model="query" :placeholder="'SearchComponent'" @keydown.enter="fetchData" />
+        <input class="searchBox" v-model="query" :placeholder="'Search'" @keydown.enter="fetchData" />
     </div>
 </template>
 
 <script setup lang="ts">
 import { router } from '@inertiajs/vue3';
 import { ref, type Ref } from 'vue';
-
-export interface Result {
-    source: string;
-    name: string;
-    version: string;
-    repo: string;
-    last_updated_date: Date;
-    flagged_date: Date;
-}
 
 const query: Ref<string> = ref('');
 const isLoading: Ref<boolean> = ref(false);
