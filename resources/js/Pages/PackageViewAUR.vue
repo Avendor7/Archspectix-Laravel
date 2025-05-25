@@ -2,7 +2,9 @@
     <SearchLayout>
         <div v-if="!isLoading">
             <div class="container">
-                <h1>{{ data.results[0].Name }}</h1>
+                <h1 class="text-5xl font-bold mb-6 pb-4 text-white">
+                    {{ data.results[0].Name }}
+                </h1>
                 <table class="resource">
                     <tbody>
                         <tr>
