@@ -1,0 +1,11 @@
+{
+    "mcpServers": {
+        "laravel-boost": {
+            "command": "/usr/bin/php",
+            "args": [
+                "/home/stephen/Documents/git/Archspectix-Laravel/artisan",
+                "boost:mcp"
+            ]
+        }
+    }
+}
