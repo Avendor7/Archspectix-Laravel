@@ -12,7 +12,7 @@
 
         <!-- Bottom-right pink glow -->
         <div
-            class="absolute right-[-10%] bottom-[-20%] h-[35rem] w-[35rem] rounded-full bg-fuchsia-600/10 blur-3xl"
+            class="absolute right-[-10%] bottom-[-10%] h-[35rem] w-[35rem] rounded-full bg-fuchsia-600/10 blur-3xl"
         ></div>
     </div>
     <div>
