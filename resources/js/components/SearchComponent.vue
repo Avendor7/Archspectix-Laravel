@@ -32,16 +32,13 @@ function fetchData() {
 
 <style scoped>
 .searchBox {
-    border: 3px solid var(--color-primary);
+    border: 3px solid rgba(60, 60, 60, 0.66);
     font-size: 3rem;
     border-radius: 0.5rem;
     padding: 0.5rem 1rem;
     margin: 20px auto;
     font-family: inherit;
     outline: none;
-    box-shadow: 0 20px 20px -20px var(--color-primary-shadow);
-    background: var(--color-background);
-    color: var(--color-text);
 }
 
 .input {

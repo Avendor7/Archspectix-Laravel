@@ -23,7 +23,8 @@
 
 /* semantic color variables for this project */
 :root {
-    --color-background: var(--vt-c-white);
+    /*TODO do a light mode gradient?*/
+  --color-background: linear-gradient(to bottom right, oklch(12.9% 0.042 264.695), oklch(35.9% 0.144 278.697), oklch(28.2% 0.091 267.935));
     --color-background-soft: var(--vt-c-white-soft);
     --color-background-mute: var(--vt-c-white-mute);
 
@@ -37,8 +38,8 @@
 }
 
 @media (prefers-color-scheme: dark) {
-    :root {
-        --color-background: var(--vt-c-black);
+  :root {
+      --color-background: linear-gradient(to bottom right, oklch(12.9% 0.042 264.695), oklch(20.8% 0.042 265.755), oklch(28.2% 0.091 267.935));
         --color-background-soft: var(--vt-c-black-soft);
         --color-background-mute: var(--vt-c-black-mute);
 
@@ -59,7 +60,8 @@
 }
 
 .top-gradient{
-    background-color:rgb(124 58 237 / 0.2);
+    /*background-color:rgb(124 58 237 / 0.2);*/
+    background-color: #0D1117;
 }
 
 body {
