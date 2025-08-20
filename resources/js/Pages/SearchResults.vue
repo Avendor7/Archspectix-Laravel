@@ -1,34 +1,36 @@
 <template>
     <SearchLayout>
-        <div class="resource">
+        <div class="bg-slate-800/30 backdrop-blur-sm rounded-2xl border border-slate-700/50 overflow-hidden">
             <table>
-                <thead>
+                <thead class="bg-slate-800/50 border-b border-slate-700/50">
                     <tr>
-                        <th>Source</th>
-                        <th>Name</th>
-                        <th>Version</th>
-                        <th>Repository</th>
-                        <th>Last Updated Date</th>
-                        <th>Flagged Date</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-slate-300">Source</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-slate-300">Name</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-slate-300">Version</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-slate-300">Repository</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-slate-300">Last Updated Date</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-slate-300">Flagged Date</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr v-for="result in data" :key="result.name">
-                        <td>{{ result.source }}</td>
-                        <td v-if="result.source == 'ALR'">
-                            <Link href="/alr-details" :data="{ value: result.name }">
+                <tbody class="divide-y divide-slate-700/30">
+                    <tr v-for="result in data" :key="result.name" class="hover:bg-slate-700/20 transition-colors duration-150">
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-arch-blue/20 text-arch-blue border border-arch-blue/30">{{ result.source }}</span>
+                        </td>
+                        <td class="px-6 py-4" v-if="result.source == 'ALR'">
+                            <Link href="/alr-details" :data="{ value: result.name }" class="text-arch-purple hover:text-arch-cyan transition-colors duration-200 font-medium">
                                 {{ result.name }}
                             </Link>
                         </td>
-                        <td v-else-if="result.source == 'AUR'">
+                        <td class="px-6 py-4" v-else-if="result.source == 'AUR'">
                             <Link href="/aur-details" :data="{ value: result.name }">
                                 {{ result.name }}
                             </Link>
                         </td>
-                        <td>{{ result.version }}</td>
-                        <td>{{ result.repo }}</td>
-                        <td>{{ formatDate(result.last_updated_date) }}</td>
-                        <td>{{ formatDate(result.flagged_date) }}</td>
+                        <td class="px-6 py-4 text-slate-300 font-mono text-sm">{{ result.version }}</td>
+                        <td class="px-6 py-4 text-slate-400">{{ result.repo }}</td>
+                        <td class="px-6 py-4 text-slate-400 text-sm">{{ formatDate(result.last_updated_date) }}</td>
+                        <td class="px-6 py-4 text-slate-400 text-sm">{{ formatDate(result.flagged_date) }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -80,12 +82,8 @@ table {
 }
 th,
 td {
-    border: 1px solid var(--color-primary);
     padding: 10px;
     text-align: left;
 }
 
-th {
-    background-color: #010101;
-}
 </style>
