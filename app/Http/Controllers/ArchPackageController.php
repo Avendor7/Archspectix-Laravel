@@ -84,16 +84,15 @@ class ArchPackageController extends Controller
             return response()->json(['error' => $error->getMessage()], 500);
         }
 
-//        try {
-//            $aurData = $this->fetchAURData($value);
-//        } catch (ConnectException $error) {
-//            Log::error('Connection error', ['error' => $error->getMessage()]);
-//            return response()->json(['error' => 'Connection error: ' . $error->getMessage()], 503);
-//        } catch (Exception $error) {
-//            Log::error('Error', ['error' => $error->getMessage()]);
-//            return response()->json(['error' => $error->getMessage()], 500);
-//        }
-        $aurData = [];
+        try {
+            $aurData = $this->fetchAURData($value);
+        } catch (ConnectException $error) {
+            Log::error('Connection error', ['error' => $error->getMessage()]);
+            return response()->json(['error' => 'Connection error: ' . $error->getMessage()], 503);
+        } catch (Exception $error) {
+            Log::error('Error', ['error' => $error->getMessage()]);
+            return response()->json(['error' => $error->getMessage()], 500);
+        }
         return Inertia::render('SearchResults', [
             'data' => $this->normalizeResults($alrData, $aurData)
         ]);
@@ -159,8 +158,7 @@ class ArchPackageController extends Controller
     private function fetchALRData(string $value)
     {
         $url = "https://archlinux.org/packages/search/json/?q=$value";
-        return json_decode(file_get_contents(storage_path('ALRdata.json')), true);;
-        //return Http::get($url)->json();
+        return Http::get($url)->json();
     }
 
     /**
