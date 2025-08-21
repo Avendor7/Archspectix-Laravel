@@ -18,6 +18,8 @@
         @inertiaHead
     </head>
     <body class="font-sans antialiased">
-        @inertia
+        <div class="container">
+            @inertia
+        </div>
     </body>
 </html>

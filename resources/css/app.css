@@ -1,8 +1,59 @@
 @import 'tailwindcss';
 
+/* Tell Tailwind v4 where to scan for class names */
+@source '../views/**/*.blade.php';
+@source '../js/**/*.{js,ts,vue}';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 
 @theme inline {
     --font-sans: Instrument Sans, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+    --color-arch-blue: #1793D1;
+    --color-arch-dark: #0D1117;
+    --color-arch-darker: #010409;
+    --color-arch-purple: #8B5CF6;
+    --color-arch-cyan: #06B6D4;
+    --color-primary: #b25bfd;
+    --color-primary-shadow: #b25bfd44;
+    --color-background: linear-gradient(to bottom right, oklch(12.9% 0.042 264.695), oklch(20.8% 0.042 265.755), oklch(28.2% 0.091 267.935));
+
+}
+
+body {
+    margin: 0; /* remove default body margin */
+    min-height: 100vh; /* ensure it spans full viewport height */
+    background: linear-gradient(
+        to bottom right,
+        oklch(12.9% 0.042 264.695),
+        oklch(20.8% 0.042 265.755),
+        oklch(28.2% 0.091 267.935)
+    ) no-repeat fixed;
+    background-size: cover; /* ensures it fills the screen */
+
+}
+
+/* Responsive container utility for desktop limits */
+.container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;  /* 16px */
+    padding-right: 1rem; /* 16px */
+}
+
+@media (min-width: 640px) { /* sm */
+    .container { max-width: 640px; }
+}
+@media (min-width: 768px) { /* md */
+    .container { max-width: 768px; }
+}
+@media (min-width: 1024px) { /* lg */
+    .container { max-width: 1024px; }
+}
+@media (min-width: 1280px) { /* xl */
+    .container { max-width: 1280px; }
+}
+@media (min-width: 1536px) { /* 2xl */
+    .container { max-width: 1536px; }
 }
