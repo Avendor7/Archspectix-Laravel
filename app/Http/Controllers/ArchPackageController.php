@@ -93,7 +93,6 @@ class ArchPackageController extends Controller
             Log::error('Error', ['error' => $error->getMessage()]);
             return response()->json(['error' => $error->getMessage()], 500);
         }
-
         return Inertia::render('SearchResults', [
             'data' => $this->normalizeResults($alrData, $aurData)
         ]);

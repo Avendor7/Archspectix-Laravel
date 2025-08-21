@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Inertia\Response;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class PackageController extends Controller
 {

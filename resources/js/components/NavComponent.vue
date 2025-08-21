@@ -8,15 +8,16 @@
     </nav>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+</script>
 
 <style scoped>
 nav a {
     display: inline-block;
     padding: 0 1rem;
-    border-left: 1px solid var(--color-border);
+    border-left: 1px solid var(--color-arch-purple);
     text-decoration: none;
-    color: var(--color-primary);
+    color: var(--color-arch-purple);
 }
 
 nav a:first-of-type {

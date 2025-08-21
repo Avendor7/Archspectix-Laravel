@@ -93,7 +93,7 @@
 <script setup lang="ts">
 import { onBeforeMount, ref, computed } from 'vue';
 import axios from 'axios';
-import SearchLayout from '@/Layouts/SearchLayout.vue';
+import SearchLayout from '@/layouts/SearchLayout.vue';
 
 interface PackageInfo {
     pkgname: string;

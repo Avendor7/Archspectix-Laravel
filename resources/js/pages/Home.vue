@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import SearchLayout from '@/Layouts/SearchLayout.vue';
+import SearchLayout from '@/layouts/SearchLayout.vue';
 </script>
 
 <style scoped></style>
