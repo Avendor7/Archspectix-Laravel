@@ -14,16 +14,19 @@
                 </thead>
                 <tbody class="divide-y divide-slate-700/30">
                     <tr v-for="result in data" :key="result.name" class="hover:bg-slate-700/20 transition-colors duration-150">
-                        <td class="px-6 py-4">
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-arch-blue/20 text-arch-blue border border-arch-blue/30">{{ result.source }}</span>
+                        <td class="px-6 py-4" v-if="result.source == 'ALR'">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-arch-blue/20 text-arch-purple border border-arch-blue/30">{{ result.source }}</span>
+                        </td>
+                        <td class="px-6 py-4" v-else-if="result.source == 'AUR'" >
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-arch-blue/30 text-arch-blue border border-arch-blue/30">{{ result.source }}</span>
                         </td>
                         <td class="px-6 py-4" v-if="result.source == 'ALR'">
                             <Link href="/alr-details" :data="{ value: result.name }" class="text-arch-purple hover:text-arch-cyan transition-colors duration-200 font-medium">
                                 {{ result.name }}
                             </Link>
                         </td>
-                        <td class="px-6 py-4" v-else-if="result.source == 'AUR'">
-                            <Link href="/aur-details" :data="{ value: result.name }">
+                        <td class="px-6 py-4" v-else-if="result.source == 'AUR'" >
+                            <Link href="/aur-details" :data="{ value: result.name }" class="text-arch-purple hover:text-arch-cyan transition-colors duration-200 font-medium">
                                 {{ result.name }}
                             </Link>
                         </td>
