@@ -16,13 +16,14 @@
     --color-arch-cyan: #06B6D4;
     --color-primary: #b25bfd;
     --color-primary-shadow: #b25bfd44;
-    --color-background: linear-gradient(to bottom right, oklch(12.9% 0.042 264.695), oklch(20.8% 0.042 265.755), oklch(28.2% 0.091 267.935));
-
 }
 
 body {
     margin: 0; /* remove default body margin */
     min-height: 100vh; /* ensure it spans full viewport height */
+}
+
+html.dark body {
     background: linear-gradient(
         to bottom right,
         oklch(12.9% 0.042 264.695),
@@ -30,7 +31,17 @@ body {
         oklch(28.2% 0.091 267.935)
     ) no-repeat fixed;
     background-size: cover; /* ensures it fills the screen */
+}
 
+html:not(.dark) body {
+    /* Softer light gradient */
+    background: linear-gradient(
+        to bottom right,
+        oklch(98% 0.01 95), /* near-white */
+        oklch(95% 0.02 110),
+        oklch(92% 0.02 120)
+    ) no-repeat fixed;
+    background-size: cover;
 }
 
 /* Responsive container utility for desktop limits */
