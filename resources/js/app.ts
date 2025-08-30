@@ -8,8 +8,11 @@ import { ZiggyVue } from 'ziggy-js';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
-// Initialize theme before the app mounts so initial paint matches preference
-function applyTheme(theme: 'light' | 'dark'): void {
+// Theme management with support for 'system' mode
+type Theme = 'light' | 'dark';
+type ThemeMode = Theme | 'system';
+
+function applyTheme(theme: Theme): void {
     const root = document.documentElement;
     if (theme === 'dark') {
         root.classList.add('dark');
@@ -18,16 +21,60 @@ function applyTheme(theme: 'light' | 'dark'): void {
     }
 }
 
-function initTheme(): void {
+function getMediaQuery(): MediaQueryList | null {
+    if (typeof window === 'undefined' || !('matchMedia' in window)) {
+        return null;
+    }
+    return window.matchMedia('(prefers-color-scheme: dark)');
+}
+
+function getStoredMode(): ThemeMode {
     try {
-        const stored = localStorage.getItem('theme');
-        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const theme: 'light' | 'dark' = stored === 'dark' || stored === 'light' ? (stored as 'dark' | 'light') : (prefersDark ? 'dark' : 'light');
-        applyTheme(theme);
-    } catch {
-        // Fallback to system preference if localStorage is unavailable
-        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        applyTheme(prefersDark ? 'dark' : 'light');
+        const storedMode = localStorage.getItem('themeMode');
+        if (storedMode === 'light' || storedMode === 'dark' || storedMode === 'system') {
+            return storedMode;
+        }
+        // Backwards compatibility with previous 'theme' storage
+        const legacy = localStorage.getItem('theme');
+        if (legacy === 'light' || legacy === 'dark') {
+            return legacy;
+        }
+    } catch {}
+    return 'system';
+}
+
+function getSystemTheme(): Theme {
+    const mq = getMediaQuery();
+    return mq && mq.matches ? 'dark' : 'light';
+}
+
+function applyCurrentMode(): void {
+    const mode = getStoredMode();
+    const theme: Theme = mode === 'system' ? getSystemTheme() : mode;
+    applyTheme(theme);
+}
+
+function initTheme(): void {
+    // Apply initial theme ASAP
+    applyCurrentMode();
+
+    // Re-apply on OS preference change, but only when in 'system' mode
+    const mq = getMediaQuery();
+    if (!mq) {
+        return;
+    }
+    const handler = () => {
+        if (getStoredMode() === 'system') {
+            applyCurrentMode();
+        }
+    };
+    // Modern browsers
+    if ('addEventListener' in mq) {
+        mq.addEventListener('change', handler as EventListener);
+    } else if ('addListener' in mq) {
+        // Older Safari
+        // @ts-expect-error: addListener exists on older Safari versions
+        mq.addListener(handler);
     }
 }
 
