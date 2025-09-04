@@ -3,7 +3,7 @@
 /* Tell Tailwind v4 where to scan for class names */
 @source '../views/**/*.blade.php';
 @source '../js/**/*.{js,ts,vue}';
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.php';
 @source '../../storage/framework/views/*.php';
 
 @theme inline {
@@ -18,30 +18,62 @@
     --color-primary-shadow: #b25bfd44;
 }
 
+/* Base body styling with comprehensive dark mode support */
 body {
     margin: 0; /* remove default body margin */
     min-height: 100vh; /* ensure it spans full viewport height */
-}
-
-html.dark body {
-    background: linear-gradient(
-        to bottom right,
-        oklch(12.9% 0.042 264.695),
-        oklch(20.8% 0.042 265.755),
-        oklch(28.2% 0.091 267.935)
-    ) no-repeat fixed;
-    background-size: cover; /* ensures it fills the screen */
-}
-
-html:not(.dark) body {
-    /* Softer light gradient */
-    background: linear-gradient(
-        to bottom right,
-        oklch(98% 0.01 95), /* near-white */
-        oklch(95% 0.02 110),
-        oklch(92% 0.02 120)
-    ) no-repeat fixed;
+    @apply bg-gradient-to-br from-slate-50 via-slate-100 to-slate-200 dark:from-slate-900 dark:via-slate-800 dark:to-slate-700;
+    background-attachment: fixed;
     background-size: cover;
+    @apply text-slate-900 dark:text-slate-100;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Enhanced dark mode support for common elements */
+html.dark {
+    color-scheme: dark;
+}
+
+html:not(.dark) {
+    color-scheme: light;
+}
+
+/* Form elements with dark mode support */
+input, textarea, select {
+    @apply bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-900 dark:text-slate-100;
+    @apply focus:ring-2 focus:ring-arch-purple/50 dark:focus:ring-arch-purple/30;
+    @apply placeholder-slate-500 dark:placeholder-slate-400;
+}
+
+/* Links with dark mode support */
+a {
+    @apply text-arch-purple dark:text-arch-cyan;
+    @apply hover:text-arch-cyan dark:hover:text-arch-blue;
+    transition: color 0.2s ease;
+}
+
+/* Buttons with dark mode support */
+button {
+    @apply transition-all duration-200 ease-in-out;
+}
+
+/* Tables with dark mode support */
+table {
+    @apply border-collapse;
+}
+
+th {
+    @apply bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100;
+}
+
+td {
+    @apply border-slate-200 dark:border-slate-700;
+}
+
+/* Code blocks with dark mode support */
+code, pre {
+    @apply bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100;
+    @apply border border-slate-200 dark:border-slate-700;
 }
 
 /* Responsive container utility for desktop limits */
@@ -67,4 +99,9 @@ html:not(.dark) body {
 }
 @media (min-width: 1536px) { /* 2xl */
     .container { max-width: 1536px; }
+}
+
+/* Smooth transitions for theme changes */
+* {
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }

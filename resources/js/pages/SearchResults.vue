@@ -1,15 +1,15 @@
 <template>
     <SearchLayout>
-        <div class="bg-white/70 dark:bg-slate-800/40 backdrop-blur-sm rounded-2xl border border-slate-200 dark:border-slate-700/50 overflow-hidden">
+        <div class="bg-slate-500 dark:bg-slate-100 backdrop-blur-sm rounded-2xl border border-slate-200 dark:border-slate-900/90 overflow-hidden">
             <table>
-                <thead class="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-700/50">
+                <thead class="bg-slate-500 dark:bg-slate-900 dark:text-slate-200 border-b border-slate-200 dark:border-slate-700/50">
                     <tr>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700 dark:text-slate-300">Source</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700 dark:text-slate-300">Name</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700 dark:text-slate-300">Version</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700 dark:text-slate-300">Repository</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700 dark:text-slate-300">Last Updated Date</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700 dark:text-slate-300">Flagged Date</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold">Source</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold">Name</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold">Version</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold">Repository</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold">Last Updated Date</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold">Flagged Date</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-200 dark:divide-slate-700/30">

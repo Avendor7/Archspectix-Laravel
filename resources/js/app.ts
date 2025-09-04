@@ -78,6 +78,7 @@ function initTheme(): void {
     }
 }
 
+// Initialize theme system
 initTheme();
 
 createInertiaApp({
