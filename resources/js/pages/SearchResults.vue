@@ -1,24 +1,24 @@
 <template>
     <SearchLayout>
-        <div class="bg-slate-800/30 backdrop-blur-sm rounded-2xl border border-slate-700/50 overflow-hidden">
+        <div class="bg-slate-100 dark:bg-slate-500 backdrop-blur-sm rounded-2xl border border-slate-900/90 dark:border-slate-400 overflow-hidden">
             <table>
-                <thead class="bg-slate-800/50 border-b border-slate-700/50">
+                <thead class="bg-slate-600 dark:bg-slate-900 text-slate-200 border-b border-slate-700/50 dark:border-slate-400">
                     <tr>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-slate-300">Source</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-slate-300">Name</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-slate-300">Version</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-slate-300">Repository</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-slate-300">Last Updated Date</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-slate-300">Flagged Date</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold">Source</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold">Name</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold">Version</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold">Repository</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold">Last Updated Date</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold">Flagged Date</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-700/30">
-                    <tr v-for="result in data" :key="result.name" class="hover:bg-slate-700/20 transition-colors duration-150">
+                <tbody class="divide-y divide-slate-900/30 dark:divide-slate-600 dark:bg-slate-900">
+                    <tr v-for="result in data" :key="result.name" class="hover:bg-slate-700/30 dark:hover:bg-slate-700 transition-colors duration-150">
                         <td class="px-6 py-4" v-if="result.source == 'ALR'">
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-arch-blue/20 text-arch-purple border border-arch-blue/30">{{ result.source }}</span>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-arch-blue/20 dark:bg-arch-blue/10 text-arch-purple border border-arch-blue/30">{{ result.source }}</span>
                         </td>
                         <td class="px-6 py-4" v-else-if="result.source == 'AUR'" >
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-arch-blue/30 text-arch-blue border border-arch-blue/30">{{ result.source }}</span>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-arch-blue/30 dark:bg-arch-blue/20 text-arch-blue border border-arch-blue/30">{{ result.source }}</span>
                         </td>
                         <td class="px-6 py-4" v-if="result.source == 'ALR'">
                             <Link href="/alr-details" :data="{ value: result.name }" class="text-arch-purple hover:text-arch-cyan transition-colors duration-200 font-medium">
@@ -30,10 +30,10 @@
                                 {{ result.name }}
                             </Link>
                         </td>
-                        <td class="px-6 py-4 text-slate-300 font-mono text-sm">{{ result.version }}</td>
-                        <td class="px-6 py-4 text-slate-400">{{ result.repo }}</td>
-                        <td class="px-6 py-4 text-slate-400 text-sm">{{ formatDate(result.last_updated_date) }}</td>
-                        <td class="px-6 py-4 text-slate-400 text-sm">{{ formatDate(result.flagged_date) }}</td>
+                        <td class="px-6 py-4 text-slate-700 dark:text-slate-300 font-mono text-sm">{{ result.version }}</td>
+                        <td class="px-6 py-4 text-slate-700 dark:text-slate-300">{{ result.repo }}</td>
+                        <td class="px-6 py-4 text-slate-700 dark:text-slate-300 text-sm">{{ formatDate(result.last_updated_date) }}</td>
+                        <td class="px-6 py-4 text-slate-700 dark:text-slate-300 text-sm">{{ formatDate(result.flagged_date) }}</td>
                     </tr>
                 </tbody>
             </table>

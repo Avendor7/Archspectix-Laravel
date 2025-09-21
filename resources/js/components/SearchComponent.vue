@@ -1,6 +1,11 @@
 <template>
     <div class="input">
-        <input class="searchBox" v-model="query" :placeholder="'Search'" @keydown.enter="fetchData" />
+        <input 
+            class="searchBox bg-white dark:bg-slate-800 border-arch-purple text-arch-purple placeholder-slate-500 dark:placeholder-slate-400 focus:ring-2 focus:ring-arch-purple/50 dark:focus:ring-arch-purple/30" 
+            v-model="query" 
+            :placeholder="'Search'" 
+            @keydown.enter="fetchData" 
+        />
     </div>
 </template>
 
@@ -39,7 +44,12 @@ function fetchData() {
     margin: 20px auto;
     font-family: inherit;
     outline: none;
-    color: var(--color-arch-purple);
+    transition: all 0.2s ease;
+}
+
+.searchBox:focus {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 3px var(--color-primary-shadow);
 }
 
 .input {

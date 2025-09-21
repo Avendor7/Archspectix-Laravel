@@ -1,10 +1,10 @@
 <template>
     <div v-if="props.isOpen" class="modal-mask">
-        <div class="container">
+        <div class="container bg-white dark:bg-slate-800">
             <h2>Colour Picker</h2>
             <div class="picker">
                 <label for="primaryColour">Primary</label>
-                <input id="primaryColour" class="pickerInput" type="color" v-model="currentInputValue" @change="setPrimary(currentInputValue)" />
+                <input id="primaryColour" class="pickerInput bg-white dark:bg-slate-700" type="color" v-model="currentInputValue" @change="setPrimary(currentInputValue)" />
                 <span>{{ currentInputValue }}</span>
             </div>
             <ul>
@@ -78,7 +78,6 @@ getPrimary();
     padding: 1rem;
     border: solid 1px var(--color-primary);
     box-shadow: var(--color-primary-shadow);
-    background-color: #222;
     border-radius: 10px;
 }
 
@@ -96,7 +95,6 @@ getPrimary();
     height: 30px;
     border: solid 0px #ccc;
     box-shadow: var(--color-primary-shadow);
-    background-color: #fff;
     text-align: center;
     margin: 0.5rem auto;
     cursor: pointer;

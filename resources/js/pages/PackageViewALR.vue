@@ -212,16 +212,12 @@ td {
     text-align: left;
 }
 
-@media (prefers-color-scheme: dark) {
-    th {
-        background-color: #010101;
-    }
+th {
+    background-color: rgb(226 232 240); /* bg-slate-200 */
 }
 
-@media (prefers-color-scheme: light) {
-    th {
-        background-color: #ccc;
-    }
+.dark th {
+    background-color: rgb(30 41 59); /* dark:bg-slate-800 */
 }
 
 .container {
@@ -238,12 +234,16 @@ td {
 }
 
 .column {
-    background-color: #010101;
+    background-color: rgb(241 245 249); /* bg-slate-100 */
     flex-basis: 33.33%;
     padding: 20px;
     border-radius: 10px;
     border: 1px solid var(--color-primary);
     box-shadow: 0 25px 50px -12px var(--color-primary-shadow);
+}
+
+.dark .column {
+    background-color: rgb(30 41 59); /* dark:bg-slate-800 */
 }
 
 h2 {
