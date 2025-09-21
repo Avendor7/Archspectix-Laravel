@@ -17,6 +17,7 @@
     --color-primary: #b25bfd;
     --color-primary-shadow: #b25bfd44;
 }
+@custom-variant dark (&:where(.dark, .dark *));
 
 /* Base body styling with comprehensive dark mode support */
 body {
