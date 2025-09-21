@@ -97,7 +97,6 @@ function onFocusOut(e: FocusEvent) {
     position: absolute;
     right: 0;
     margin-top: 8px;
-    background: var(--panel-bg);
     border-radius: 6px;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
     padding: 6px;
