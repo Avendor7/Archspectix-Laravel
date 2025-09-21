@@ -2,7 +2,7 @@
     <Head title="Archspectix" />
     <div>
         <NavComponent />
-        <div class="mt-5 mb-5">
+        <div class="pt-5 pb-5">
             <SearchComponent />
         </div>
         <slot />
