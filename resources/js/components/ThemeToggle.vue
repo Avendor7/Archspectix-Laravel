@@ -6,7 +6,7 @@
             <span v-else>☀️</span>
         </button>
 
-        <ul v-if="open" role="menu" class="theme-menu" @keydown.escape="close" @focusout="onFocusOut">
+        <ul v-if="open" role="menu" class="theme-menu" @keydown.esc="close" @focusout="onFocusOut">
             <li role="menuitem">
                 <button @click="setMode('light')">Light</button>
             </li>
