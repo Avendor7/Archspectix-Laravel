@@ -39,44 +39,6 @@ html:not(.dark) {
     color-scheme: light;
 }
 
-/* Form elements with dark mode support */
-input, textarea, select {
-    @apply bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-900 dark:text-slate-100;
-    @apply focus:ring-2 focus:ring-arch-purple/50 dark:focus:ring-arch-purple/30;
-    @apply placeholder-slate-500 dark:placeholder-slate-400;
-}
-
-/* Links with dark mode support */
-a {
-    @apply text-arch-purple dark:text-arch-cyan;
-    @apply hover:text-arch-cyan dark:hover:text-arch-blue;
-    transition: color 0.2s ease;
-}
-
-/* Buttons with dark mode support */
-button {
-    @apply transition-all duration-200 ease-in-out;
-}
-
-/* Tables with dark mode support */
-table {
-    @apply border-collapse;
-}
-
-th {
-    @apply bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100;
-}
-
-td {
-    @apply border-slate-200 dark:border-slate-700;
-}
-
-/* Code blocks with dark mode support */
-code, pre {
-    @apply bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100;
-    @apply border border-slate-200 dark:border-slate-700;
-}
-
 /* Responsive container utility for desktop limits */
 .container {
     width: 100%;
