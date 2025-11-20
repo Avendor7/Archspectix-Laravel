@@ -1,6 +1,6 @@
 <template>
     <SearchLayout>
-        <div v-if="!isLoading">
+        <div v-if="data.results.length">
             <div class="container">
                 <h1 class="text-5xl font-bold mb-6 pb-4 text-white">
                     {{ data.results[0].pkgname }}
@@ -91,8 +91,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, ref, computed } from 'vue';
-import axios from 'axios';
+import { computed, toRefs } from 'vue';
 import SearchLayout from '@/layouts/SearchLayout.vue';
 
 interface PackageInfo {
@@ -142,52 +141,20 @@ interface Data {
     num_pages: number;
     page: number;
 }
-const data = ref<Data>({
-    version: 0,
-    limit: 0,
-    valid: false,
-    results: [],
-    type: '',
-    num_pages: 0,
-    page: 0,
-});
-
-const isLoading = ref(false);
-//const route = useRoute();
-//const query = String(route.params.query); // You can also use a type guard for better TypeScript support
 const props = defineProps<{
     query: string;
+    data: Data;
 }>();
-function fetchData() {
-    isLoading.value = true;
-    console.log(props.query);
-    // Use relative URL to avoid port issues with php artisan serve
-    const url = '/api/alr/info?value=' + props.query;
-    console.log(url);
-    axios
-        .get(url)
-        .then((response) => {
-            data.value = response.data;
-            console.log(data.value);
-        })
-        .catch((error) => {
-            console.error(error);
-        })
-        .finally(() => {
-            isLoading.value = false;
-        });
-}
-onBeforeMount(() => {
-    fetchData();
-});
+// expose `data` for template and computed usage, staying reactive to Inertia prop updates
+const { data } = toRefs(props);
 
 //I don't really like this block. Some duplication but Typescript seems to not like combining things
 const formatCompressedSize = computed(() => {
-    return formatSize(data.value.results[0].compressed_size);
+    return data.value.results.length ? formatSize(data.value.results[0].compressed_size) : '';
 });
 
 const formatInstalledSize = computed(() => {
-    return formatSize(data.value.results[0].installed_size);
+    return data.value.results.length ? formatSize(data.value.results[0].installed_size) : '';
 });
 
 const formatSize = (size: number) => {

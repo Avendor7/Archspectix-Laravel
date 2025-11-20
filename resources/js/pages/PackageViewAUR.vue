@@ -1,6 +1,6 @@
 <template>
     <SearchLayout>
-        <div v-if="!isLoading">
+        <div v-if="data.results.length">
             <div class="container">
                 <h1 class="text-5xl font-bold mb-6 pb-4 text-white">
                     {{ data.results[0].Name }}
@@ -70,8 +70,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, ref } from 'vue';
-import axios from 'axios';
+import { toRefs } from 'vue';
 import SearchLayout from '@/layouts/SearchLayout.vue';
 
 interface Data {
@@ -87,13 +86,13 @@ interface AURPackage {
     FirstSubmitted: number;
     ID: number;
     Keywords: string[];
-    LastModified: Date;
+    LastModified: string | null; // ISO8601 from server
     License: string[];
     Maintainer: string;
     MakeDepends: string[];
     Name: string;
     NumVotes: number;
-    OutOfDate: Date;
+    OutOfDate: string | null; // ISO8601 from server
     PackageBase: string;
     PackageBaseID: number;
     Popularity: number;
@@ -103,38 +102,13 @@ interface AURPackage {
     Version: string;
 }
 
-const data = ref<Data>({
-    resultcount: 0,
-    results: [],
-    type: '',
-    version: 0,
-});
-
-const isLoading = ref(false);
-//const route = useRoute();
-//const query = String(route.params.query); // You can also use a type guard for better TypeScript support
 const props = defineProps<{
     query: string;
+    data: Data;
 }>();
-function fetchData() {
-    isLoading.value = true;
-    // Use relative URL to avoid port issues with php artisan serve
-    const url = '/api/aur/info?value=' + props.query;
+const { data } = toRefs(props);
 
-    axios
-        .get(url)
-        .then((response) => {
-            data.value = response.data;
-        })
-        .catch((error) => {
-            console.error(error);
-        })
-        .finally(() => {
-            isLoading.value = false;
-        });
-}
-
-function formatDate(timestamp: Date) {
+function formatDate(timestamp: string | number | Date | null) {
     return timestamp
         ? new Date(timestamp).toLocaleString('en-US', {
               year: 'numeric',
@@ -145,10 +119,6 @@ function formatDate(timestamp: Date) {
           })
         : '';
 }
-
-onBeforeMount(() => {
-    fetchData();
-});
 </script>
 
 <style scoped>
