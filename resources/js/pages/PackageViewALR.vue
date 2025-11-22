@@ -179,16 +179,14 @@ td {
     text-align: left;
 }
 
-@media (prefers-color-scheme: dark) {
-    th {
-        background-color: #010101;
-    }
+th {
+    width: 30%;
+    white-space: nowrap;
 }
 
-@media (prefers-color-scheme: light) {
-    th {
-        background-color: #ccc;
-    }
+td {
+    width: 70%;
+    word-break: break-word;
 }
 
 .container {
@@ -205,7 +203,6 @@ td {
 }
 
 .column {
-    background-color: #010101;
     flex-basis: 33.33%;
     padding: 20px;
     border-radius: 10px;
@@ -216,5 +213,46 @@ td {
 h2 {
     font-weight: bold;
     margin-bottom: 15px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .resource {
+        background-color: #020617; /* slate-950 */
+    }
+
+    th {
+        background-color: #0f172a; /* slate-900 */
+        color: #e5e7eb; /* gray-200 */
+    }
+
+    td {
+        color: #e5e7eb; /* gray-200 */
+    }
+
+    .column {
+        background-color: #020617; /* slate-950 */
+        color: #e5e7eb; /* gray-200 */
+        border-color: var(--color-primary-shadow);
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    .resource {
+        background-color: #f9fafb; /* gray-50 */
+    }
+
+    th {
+        background-color: #e5e7eb; /* gray-200 */
+        color: #111827; /* gray-900 */
+    }
+
+    td {
+        color: #111827; /* gray-900 */
+    }
+
+    .column {
+        background-color: #f9fafb; /* gray-50 */
+        color: #111827; /* gray-900 */
+    }
 }
 </style>
