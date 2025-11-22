@@ -1,14 +1,17 @@
 <template>
-    <nav>
+    <nav class="pt-5">
         <span class="title"><a href="/">Archspectix</a></span>
+        <ThemeToggle class="split"/>
         <a href="https://archlinux.org" class="split">Arch Linux</a>
         <a href="https://wiki.archlinux.org/title/Main_page" class="split">Arch Wiki</a>
         <a href="https://archlinux.org/packages/" class="split">Arch Package Search</a>
         <a href="https://aur.archlinux.org/packages" class="split">Arch User Repository</a>
+
     </nav>
 </template>
 
 <script setup lang="ts">
+import ThemeToggle from '@/components/ThemeToggle.vue';
 </script>
 
 <style scoped>
@@ -20,15 +23,11 @@ nav a {
     color: var(--color-arch-purple);
 }
 
-nav a:first-of-type {
-    border: 0;
-}
-
 nav a:last-of-type {
     border: 0;
 }
 
-nav a.split {
+nav a.split, .theme-toggle.split, .controls.split {
     float: right;
 }
 .title {
@@ -37,4 +36,5 @@ nav a.split {
     color: var(--color-primary);
     text-decoration: none;
 }
+
 </style>

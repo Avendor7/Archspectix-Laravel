@@ -3,7 +3,7 @@
 /* Tell Tailwind v4 where to scan for class names */
 @source '../views/**/*.blade.php';
 @source '../js/**/*.{js,ts,vue}';
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.php';
 @source '../../storage/framework/views/*.php';
 
 @theme inline {
@@ -16,21 +16,27 @@
     --color-arch-cyan: #06B6D4;
     --color-primary: #b25bfd;
     --color-primary-shadow: #b25bfd44;
-    --color-background: linear-gradient(to bottom right, oklch(12.9% 0.042 264.695), oklch(20.8% 0.042 265.755), oklch(28.2% 0.091 267.935));
-
 }
+@custom-variant dark (&:where(.dark, .dark *));
 
+/* Base body styling with comprehensive dark mode support */
 body {
     margin: 0; /* remove default body margin */
     min-height: 100vh; /* ensure it spans full viewport height */
-    background: linear-gradient(
-        to bottom right,
-        oklch(12.9% 0.042 264.695),
-        oklch(20.8% 0.042 265.755),
-        oklch(28.2% 0.091 267.935)
-    ) no-repeat fixed;
-    background-size: cover; /* ensures it fills the screen */
+    @apply bg-gradient-to-br from-slate-50 via-slate-100 to-slate-200 dark:from-slate-900 dark:via-slate-800 dark:to-slate-700;
+    background-attachment: fixed;
+    background-size: cover;
+    @apply text-slate-900 dark:text-slate-100;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
 
+/* Enhanced dark mode support for common elements */
+html.dark {
+    color-scheme: dark;
+}
+
+html:not(.dark) {
+    color-scheme: light;
 }
 
 /* Responsive container utility for desktop limits */
@@ -56,4 +62,9 @@ body {
 }
 @media (min-width: 1536px) { /* 2xl */
     .container { max-width: 1536px; }
+}
+
+/* Smooth transitions for theme changes */
+* {
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
