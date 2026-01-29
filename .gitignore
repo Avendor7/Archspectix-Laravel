@@ -24,3 +24,13 @@ yarn-error.log
 /.zed
 /.junie
 /.ai/mcp/mcp.json
+/AGENTS.md
+/boost.json
+/.github/copilot-instructions.md
+/opencode.json
+/.github/skills/inertia-vue-development/SKILL.md
+/.github/skills/pest-testing/SKILL.md
+/.github/skills/tailwindcss-development/SKILL.md
+/.opencode/skills/inertia-vue-development/SKILL.md
+/.opencode/skills/pest-testing/SKILL.md
+/.opencode/skills/tailwindcss-development/SKILL.md
