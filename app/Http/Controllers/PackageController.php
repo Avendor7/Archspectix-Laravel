@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\OmarchyRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -10,6 +11,27 @@ use Inertia\Response;
 
 class PackageController extends Controller
 {
+    public function omarchyDetails(Request $request, OmarchyRepository $omarchy): Response
+    {
+        $query = $request->input('value');
+        $package = null;
+        $error = null;
+
+        if ($query) {
+            try {
+                $package = $omarchy->packages()[$query] ?? null;
+            } catch (\Throwable $exception) {
+                Log::warning('Omarchy details fetch failed', ['error' => $exception->getMessage()]);
+                $error = 'Omarchy packages are temporarily unavailable. Please try again.';
+            }
+        }
+
+        return Inertia::render('PackageViewOmarchy', [
+            'package' => $package,
+            'error' => $error,
+        ]);
+    }
+
     public function alrDetails(Request $request): Response
     {
         $query = $request->input('value');

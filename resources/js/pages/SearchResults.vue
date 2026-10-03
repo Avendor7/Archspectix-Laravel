@@ -1,5 +1,6 @@
 <template>
     <SearchLayout>
+        <p v-if="omarchyError" role="status" class="mb-4 text-arch-purple">{{ omarchyError }}</p>
         <div class="bg-slate-100 dark:bg-slate-500 backdrop-blur-sm rounded-2xl border border-slate-900/90 dark:border-slate-400 overflow-hidden">
             <table>
                 <thead class="bg-slate-600 dark:bg-slate-900 text-slate-200 border-b border-slate-700/50 dark:border-slate-400">
@@ -8,17 +9,20 @@
                         <th class="px-6 py-4 text-left text-sm font-semibold">Name</th>
                         <th class="px-6 py-4 text-left text-sm font-semibold">Version</th>
                         <th class="px-6 py-4 text-left text-sm font-semibold">Repository</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold">Last Updated Date</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold">Updated / Built</th>
                         <th class="px-6 py-4 text-left text-sm font-semibold">Flagged Date</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-900/30 dark:divide-slate-600 dark:bg-slate-900">
-                    <tr v-for="result in data" :key="result.name" class="hover:bg-slate-700/30 dark:hover:bg-slate-700 transition-colors duration-150">
+                    <tr v-for="result in data" :key="`${result.source}-${result.repo}-${result.name}`" class="hover:bg-slate-700/30 dark:hover:bg-slate-700 transition-colors duration-150">
                         <td class="px-6 py-4" v-if="result.source == 'ALR'">
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-arch-blue/20 dark:bg-arch-blue/10 text-arch-purple border border-arch-blue/30">{{ result.source }}</span>
                         </td>
                         <td class="px-6 py-4" v-else-if="result.source == 'AUR'" >
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-arch-blue/30 dark:bg-arch-blue/20 text-arch-blue border border-arch-blue/30">{{ result.source }}</span>
+                        </td>
+                        <td class="px-6 py-4" v-else-if="result.source == 'Omarchy'">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-arch-cyan/20 text-arch-cyan border border-arch-cyan/30">{{ result.source }}</span>
                         </td>
                         <td class="px-6 py-4" v-if="result.source == 'ALR'">
                             <Link href="/alr-details" :data="{ value: result.name }" class="text-arch-purple hover:text-arch-cyan transition-colors duration-200 font-medium">
@@ -30,9 +34,17 @@
                                 {{ result.name }}
                             </Link>
                         </td>
+                        <td class="px-6 py-4" v-else-if="result.source == 'Omarchy'">
+                            <Link href="/omarchy-details" :data="{ value: result.name }" class="text-arch-purple hover:text-arch-cyan transition-colors duration-200 font-medium">
+                                {{ result.name }}
+                            </Link>
+                        </td>
                         <td class="px-6 py-4 text-slate-700 dark:text-slate-300 font-mono text-sm">{{ result.version }}</td>
                         <td class="px-6 py-4 text-slate-700 dark:text-slate-300">{{ result.repo }}</td>
-                        <td class="px-6 py-4 text-slate-700 dark:text-slate-300 text-sm">{{ formatDate(result.last_updated_date) }}</td>
+                        <td class="px-6 py-4 text-slate-700 dark:text-slate-300 text-sm">
+                            <span v-if="result.source == 'Omarchy' && result.build_date">Built {{ formatDate(result.build_date) }}</span>
+                            <span v-else>{{ formatDate(result.last_updated_date) }}</span>
+                        </td>
                         <td class="px-6 py-4 text-slate-700 dark:text-slate-300 text-sm">{{ formatDate(result.flagged_date) }}</td>
                     </tr>
                 </tbody>
@@ -43,24 +55,26 @@
 
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { defineProps } from 'vue';
+import { toRefs } from 'vue';
 import SearchLayout from '@/layouts/SearchLayout.vue';
 interface Result {
     source: string;
     name: string;
     version: string;
     repo: string;
-    last_updated_date: Date;
-    flagged_date: Date;
+    last_updated_date: string | null;
+    build_date?: string | null;
+    flagged_date: string | null;
 }
 
 const props = defineProps<{
     data: Result[];
+    omarchyError: string | null;
 }>();
 
-const { data } = props;
+const { data, omarchyError } = toRefs(props);
 
-function formatDate(timestamp: Date) {
+function formatDate(timestamp: string | null) {
     return timestamp
         ? new Date(timestamp).toLocaleString('en-US', {
               year: 'numeric',
