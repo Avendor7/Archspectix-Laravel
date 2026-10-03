@@ -2,6 +2,29 @@
 
 Search packages from the official Arch Linux repositories, AUR and Omarchy.
 
+## Local development
+
+Install dependencies with `composer install` and `npm ci`. For a new checkout,
+copy `.env.example` to `.env`, run `php artisan key:generate`, and run
+`php artisan migrate` to create the local database.
+
+Start the development services with:
+
+```sh
+composer run dev
+```
+
+This uses Laravel's `artisan dev` command and
+[`@laravel/multiplex`](https://github.com/laravel/multiplex), as in the current
+Laravel starter kits. On macOS and Linux, the server, queue, logs, and Vite run
+in separate tabs. Press `1`–`4` to select a tab, `s` for combined output, `r` to
+restart the selected process, `/` to search, and `q` to quit.
+
+Use `composer run dev -- --inline` for plain terminal output or
+`composer run dev -- --stream` to start with combined output. Windows uses
+Laravel's Concurrently fallback. Node.js 22.13 or later is required; see
+[DEPENDENCIES.md](DEPENDENCIES.md) for the project's runtime requirements.
+
 ## Omarchy packages
 
 Omarchy search and details use the official stable x86_64 repository database.
