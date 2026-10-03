@@ -2,11 +2,15 @@
 
 GitLab runs the pipeline in `.gitlab-ci.yml` for branch pushes, tags, and merge
 requests. An open merge request replaces the duplicate branch pipeline.
+New commits cancel superseded jobs.
 
 The pipeline checks formatting, lint, TypeScript, and dependency audits;
 builds the browser and SSR assets; runs Pest on PHP 8.4 and 8.5; and then
 builds and publishes a production image. Tests use an in-memory SQLite database
 and an ephemeral application key. JUnit results appear in GitLab's test report.
+Frontend checks and asset compilation share one dependency install. PHP checks
+share the PHP 8.4 test job's install, while PHP 8.5 runs its own tests. The image
+reuses the checked frontend artifacts instead of compiling them again.
 
 Images are published with the full commit SHA:
 
@@ -20,23 +24,18 @@ requests publish only their commit SHA tag.
 
 The `publish_image` job also provides `image.env` with the exact `APP_IMAGE`
 value pinned to the commit SHA. Registry authentication uses GitLab's built-in
-job credentials; no additional project secrets are needed. The default branch (`master`) updates
-the registry build cache. GitLab does not deploy to your server.
+job credentials; no additional project secrets are needed. Image builds reuse
+layers in the registry's `/cache` repository. The revision label is applied last
+so a new commit does not invalidate the dependency layers. GitLab does not deploy
+to your server.
 
 ## Runner requirements
 
 Use a Linux GitLab runner with the Docker executor and no job tags. The existing
-instance runner accepts untagged jobs. Image builds use rootless BuildKit.
-For a self-managed Docker executor, allow its user namespaces and mounts:
-
-```toml
-[runners.docker]
-  security_opt = ["seccomp:unconfined", "apparmor:unconfined"]
-```
-
-This setting belongs in the runner's `config.toml`. The pipeline does not use
-Docker-in-Docker or require a Docker socket mount. See GitLab's
-[BuildKit runner requirements](https://docs.gitlab.com/ci/docker/using_buildkit/).
+instance runner accepts untagged jobs. Image builds use the maintained
+[Kaniko community fork](https://github.com/osscontainertools/kaniko), pinned by
+image digest. It runs with the runner's existing Docker security settings and
+does not require Docker-in-Docker, a Docker socket mount, or privileged mode.
 
 ## Run the published image
 

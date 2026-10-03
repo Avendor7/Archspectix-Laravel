@@ -1,4 +1,6 @@
 workflow:
+  auto_cancel:
+    on_new_commit: interruptible
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS'
@@ -7,7 +9,6 @@ workflow:
 
 stages:
   - validate
-  - build
   - test
   - publish
 
@@ -49,14 +50,6 @@ variables:
   before_script:
     - npm ci --prefer-offline --no-audit
 
-backend_checks:
-  extends: .php
-  stage: validate
-  script:
-    - composer validate --strict
-    - composer audit
-    - vendor/bin/pint --test
-
 frontend_checks:
   extends: .node
   stage: validate
@@ -65,11 +58,6 @@ frontend_checks:
     - npm run format:check
     - npm run typecheck
     - npm audit
-
-build_assets:
-  extends: .node
-  stage: build
-  script:
     - npm run build:ssr
   artifacts:
     expire_in: 1 week
@@ -84,9 +72,15 @@ php_tests:
     matrix:
       - PHP_VERSION: ['8.4', '8.5']
   needs:
-    - job: build_assets
+    - job: frontend_checks
       artifacts: true
   script:
+    - |
+      if [ "$PHP_VERSION" = "8.4" ]; then
+        composer validate --strict
+        composer audit
+        vendor/bin/pint --test
+      fi
     - cp .env.example .env
     - php artisan key:generate --no-interaction
     - php artisan config:clear
@@ -100,32 +94,34 @@ php_tests:
 
 publish_image:
   image:
-    name: moby/buildkit:rootless
+    name: ghcr.io/osscontainertools/kaniko:debug@sha256:d6d74217dc077acfd3094992e917c357080a2d3fdd1042a49e34e29a7e57c572
     entrypoint: ['']
   stage: publish
-  variables:
-    BUILDKITD_FLAGS: --oci-worker-no-process-sandbox
+  needs:
+    - job: frontend_checks
+      artifacts: true
+    - job: php_tests
+      artifacts: false
   before_script:
-    - mkdir -p ~/.docker
+    - mkdir -p /kaniko/.docker
     - |
       registry_auth=$(printf '%s:%s' "$CI_REGISTRY_USER" "$CI_REGISTRY_PASSWORD" | base64 | tr -d '\n')
-      printf '{"auths":{"%s":{"auth":"%s"}}}\n' "$CI_REGISTRY" "$registry_auth" > ~/.docker/config.json
+      printf '{"auths":{"%s":{"auth":"%s"}}}\n' "$CI_REGISTRY" "$registry_auth" > /kaniko/.docker/config.json
   script:
     - |
-      image_names="$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA"
-      set --
+      set -- --destination "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA"
       if [ "$CI_COMMIT_BRANCH" = "$CI_DEFAULT_BRANCH" ]; then
-        image_names="$image_names,$CI_REGISTRY_IMAGE:latest"
-        set -- --export-cache "type=registry,ref=$CI_REGISTRY_IMAGE:buildcache,mode=max"
+        set -- "$@" --destination "$CI_REGISTRY_IMAGE:latest"
       fi
-      buildctl-daemonless.sh build \
-        --frontend dockerfile.v0 \
-        --local context=. \
-        --local dockerfile=. \
-        --opt target=production \
-        --opt "build-arg:VCS_REF=$CI_COMMIT_SHA" \
-        --import-cache "type=registry,ref=$CI_REGISTRY_IMAGE:buildcache" \
-        --output "type=image,\"name=$image_names\",push=true" \
+      /kaniko/executor \
+        --context "$CI_PROJECT_DIR" \
+        --dockerfile "$CI_PROJECT_DIR/Dockerfile" \
+        --target production \
+        --build-arg ASSET_STAGE=assets-prebuilt \
+        --build-arg "VCS_REF=$CI_COMMIT_SHA" \
+        --cache=true \
+        --cache-copy-layers=true \
+        --cache-repo "$CI_REGISTRY_IMAGE/cache" \
         "$@"
     - 'printf "APP_IMAGE=%s:%s\n" "$CI_REGISTRY_IMAGE" "$CI_COMMIT_SHA" > image.env'
   artifacts:

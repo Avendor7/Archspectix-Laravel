@@ -1,4 +1,5 @@
 # syntax=docker/dockerfile:1
+ARG ASSET_STAGE=assets
 FROM node:22-bookworm-slim AS assets
 WORKDIR /app
 COPY package.json package-lock.json ./
@@ -6,6 +7,13 @@ RUN npm ci --no-audit
 COPY vite.config.ts tsconfig.json ./
 COPY resources ./resources
 RUN npm run build:ssr && npm prune --omit=dev --no-audit
+
+FROM node:22-bookworm-slim AS assets-prebuilt
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev --no-audit
+COPY public/build ./public/build
+COPY bootstrap/ssr ./bootstrap/ssr
 
 FROM php:8.4-cli-bookworm AS dependencies
 WORKDIR /app
@@ -15,9 +23,9 @@ COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 COPY composer.json composer.lock ./
 RUN composer install --no-dev --no-scripts --no-autoloader --no-interaction --prefer-dist --no-progress
 
+FROM ${ASSET_STAGE} AS compiled-assets
+
 FROM dunglas/frankenphp:php8.4-bookworm AS production
-ARG VCS_REF=unknown
-LABEL org.opencontainers.image.revision=$VCS_REF
 WORKDIR /app
 RUN install-php-extensions pdo_pgsql opcache \
     && mkdir -p /data/caddy /config/caddy \
@@ -27,9 +35,9 @@ RUN node --version
 COPY --from=dependencies /usr/local/bin/composer /usr/local/bin/composer
 COPY --chown=www-data:www-data . .
 COPY --from=dependencies --chown=www-data:www-data /app/vendor ./vendor
-COPY --from=assets --chown=www-data:www-data /app/public/build ./public/build
-COPY --from=assets --chown=www-data:www-data /app/bootstrap/ssr ./bootstrap/ssr
-COPY --from=assets --chown=www-data:www-data /app/node_modules ./node_modules
+COPY --from=compiled-assets --chown=www-data:www-data /app/public/build ./public/build
+COPY --from=compiled-assets --chown=www-data:www-data /app/bootstrap/ssr ./bootstrap/ssr
+COPY --from=compiled-assets --chown=www-data:www-data /app/node_modules ./node_modules
 COPY docker/Caddyfile /etc/caddy/Caddyfile
 COPY docker/php.ini /usr/local/etc/php/conf.d/zz-app.ini
 COPY --chmod=755 docker/entrypoint.sh /usr/local/bin/app-entrypoint
@@ -47,3 +55,5 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
     CMD curl --fail --silent http://127.0.0.1:8080/up || exit 1
 ENTRYPOINT ["app-entrypoint"]
 CMD ["frankenphp", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
+ARG VCS_REF=unknown
+LABEL org.opencontainers.image.revision=$VCS_REF
