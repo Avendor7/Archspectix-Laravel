@@ -10,6 +10,11 @@
 .env
 .env.backup
 .env.production
+.env.docker
+/.composer-cache
+/.npm
+/build
+/image.env
 .phpactor.json
 .phpunit.result.cache
 Homestead.json

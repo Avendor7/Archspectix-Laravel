@@ -14,8 +14,7 @@ class SearchController extends Controller
 
         return Inertia::render('SearchComponent', [
             'query' => $query,
-            'results' => $results
+            'results' => $results,
         ]);
     }
-
 }

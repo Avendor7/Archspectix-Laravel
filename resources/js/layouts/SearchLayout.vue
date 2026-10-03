@@ -15,7 +15,4 @@ import NavComponent from '../components/NavComponent.vue';
 import SearchComponent from '../components/SearchComponent.vue';
 </script>
 
-<style scoped>
-
-
-</style>
+<style scoped></style>

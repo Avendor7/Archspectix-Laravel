@@ -1,10 +1,10 @@
 <template>
     <div class="input">
-        <input 
-            class="searchBox bg-white dark:bg-slate-800 border-arch-purple text-arch-purple placeholder-slate-500 dark:placeholder-slate-400 focus:ring-2 focus:ring-arch-purple/50 dark:focus:ring-arch-purple/30" 
-            v-model="query" 
-            :placeholder="'Search'" 
-            @keydown.enter="fetchData" 
+        <input
+            class="searchBox border-arch-purple bg-white text-arch-purple placeholder-slate-500 focus:ring-2 focus:ring-arch-purple/50 dark:bg-slate-800 dark:placeholder-slate-400 dark:focus:ring-arch-purple/30"
+            v-model="query"
+            :placeholder="'Search'"
+            @keydown.enter="fetchData"
         />
     </div>
 </template>
