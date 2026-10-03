@@ -4,7 +4,13 @@
             <h2>Colour Picker</h2>
             <div class="picker">
                 <label for="primaryColour">Primary</label>
-                <input id="primaryColour" class="pickerInput bg-white dark:bg-slate-700" type="color" v-model="currentInputValue" @change="setPrimary(currentInputValue)" />
+                <input
+                    id="primaryColour"
+                    class="pickerInput bg-white dark:bg-slate-700"
+                    type="color"
+                    v-model="currentInputValue"
+                    @change="setPrimary(currentInputValue)"
+                />
                 <span>{{ currentInputValue }}</span>
             </div>
             <ul>

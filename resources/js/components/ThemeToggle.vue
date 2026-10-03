@@ -26,7 +26,7 @@ import { ref, watch, onMounted, onBeforeUnmount, nextTick } from 'vue';
 type Mode = 'light' | 'dark' | 'system';
 const STORAGE_KEY = 'site-theme';
 
-const mode = ref<Mode>((localStorage.getItem(STORAGE_KEY) as Mode) ?? 'system');
+const mode = ref<Mode>('system');
 const open = ref(false);
 const btn = ref<HTMLButtonElement | null>(null);
 
@@ -42,18 +42,20 @@ const applyTheme = (m: Mode) => {
     }
 };
 
-const mq = window.matchMedia('(prefers-color-scheme: dark)');
+let mq: MediaQueryList | null = null;
 const systemListener = () => {
     if (mode.value === 'system') applyTheme('system');
 };
 
 onMounted(() => {
+    mode.value = (localStorage.getItem(STORAGE_KEY) as Mode) ?? 'system';
+    mq = window.matchMedia('(prefers-color-scheme: dark)');
     applyTheme(mode.value);
     mq.addEventListener('change', systemListener);
 });
 
 onBeforeUnmount(() => {
-    mq.removeEventListener('change', systemListener);
+    mq?.removeEventListener('change', systemListener);
 });
 
 watch(mode, (m) => {

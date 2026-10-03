@@ -1,0 +1,136 @@
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS'
+      when: never
+    - if: '$CI_COMMIT_BRANCH || $CI_COMMIT_TAG'
+
+stages:
+  - validate
+  - build
+  - test
+  - publish
+
+default:
+  interruptible: true
+  timeout: 20 minutes
+
+variables:
+  COMPOSER_CACHE_DIR: '$CI_PROJECT_DIR/.composer-cache'
+  COMPOSER_ALLOW_SUPERUSER: '1'
+  npm_config_cache: '$CI_PROJECT_DIR/.npm'
+  APP_ENV: testing
+  NIGHTWATCH_ENABLED: 'false'
+
+.php:
+  image: 'php:${PHP_VERSION}-cli-bookworm'
+  variables:
+    PHP_VERSION: '8.4'
+  cache:
+    key:
+      prefix: 'composer-${PHP_VERSION}'
+      files:
+        - composer.lock
+    paths:
+      - .composer-cache/
+  before_script:
+    - sh .gitlab/ci/install-composer.sh
+    - composer install --no-interaction --prefer-dist --no-progress --optimize-autoloader
+
+.node:
+  image: node:22-bookworm-slim
+  cache:
+    key:
+      prefix: node-22
+      files:
+        - package-lock.json
+    paths:
+      - .npm/
+  before_script:
+    - npm ci --prefer-offline --no-audit
+
+backend_checks:
+  extends: .php
+  stage: validate
+  script:
+    - composer validate --strict
+    - composer audit
+    - vendor/bin/pint --test
+
+frontend_checks:
+  extends: .node
+  stage: validate
+  script:
+    - npm run lint:check
+    - npm run format:check
+    - npm run typecheck
+    - npm audit
+
+build_assets:
+  extends: .node
+  stage: build
+  script:
+    - npm run build:ssr
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - public/build/
+      - bootstrap/ssr/
+
+php_tests:
+  extends: .php
+  stage: test
+  parallel:
+    matrix:
+      - PHP_VERSION: ['8.4', '8.5']
+  needs:
+    - job: build_assets
+      artifacts: true
+  script:
+    - cp .env.example .env
+    - php artisan key:generate --no-interaction
+    - php artisan config:clear
+    - mkdir -p build
+    - 'vendor/bin/pest --ci --log-junit "build/junit-php-${PHP_VERSION}.xml"'
+  artifacts:
+    when: always
+    expire_in: 1 week
+    reports:
+      junit: 'build/junit-php-*.xml'
+
+publish_image:
+  image:
+    name: moby/buildkit:rootless
+    entrypoint: ['']
+  stage: publish
+  variables:
+    BUILDKITD_FLAGS: --oci-worker-no-process-sandbox
+  before_script:
+    - mkdir -p ~/.docker
+    - |
+      registry_auth=$(printf '%s:%s' "$CI_REGISTRY_USER" "$CI_REGISTRY_PASSWORD" | base64 | tr -d '\n')
+      printf '{"auths":{"%s":{"auth":"%s"}}}\n' "$CI_REGISTRY" "$registry_auth" > ~/.docker/config.json
+  script:
+    - |
+      image_names="$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA"
+      set --
+      if [ "$CI_COMMIT_BRANCH" = "$CI_DEFAULT_BRANCH" ]; then
+        image_names="$image_names,$CI_REGISTRY_IMAGE:latest"
+        set -- --export-cache "type=registry,ref=$CI_REGISTRY_IMAGE:buildcache,mode=max"
+      fi
+      buildctl-daemonless.sh build \
+        --frontend dockerfile.v0 \
+        --local context=. \
+        --local dockerfile=. \
+        --opt target=production \
+        --opt "build-arg:VCS_REF=$CI_COMMIT_SHA" \
+        --import-cache "type=registry,ref=$CI_REGISTRY_IMAGE:buildcache" \
+        --output "type=image,\"name=$image_names\",push=true" \
+        "$@"
+    - 'printf "APP_IMAGE=%s:%s\n" "$CI_REGISTRY_IMAGE" "$CI_COMMIT_SHA" > image.env'
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - image.env
+    reports:
+      dotenv: image.env
