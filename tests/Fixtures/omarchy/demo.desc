@@ -1,0 +1,46 @@
+%FILENAME%
+omarchy-demo-1.2.3-4-any.pkg.tar.zst
+
+%NAME%
+omarchy-demo
+
+%VERSION%
+1:1.2.3-4
+
+%DESC%
+A small desktop tool
+
+%ARCH%
+any
+
+%URL%
+https://example.org/demo
+
+%LICENSE%
+MIT
+BSD-3-Clause
+
+%SHA256SUM%
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+
+%CSIZE%
+2048
+
+%ISIZE%
+4096
+
+%BUILDDATE%
+1700000000
+
+%PACKAGER%
+Example Packager
+
+%DEPENDS%
+glibc>=2.38
+gum
+
+%OPTDEPENDS%
+git: version control
+
+%MAKEDEPENDS%
+meson

@@ -10,6 +10,7 @@ Route::get('/', [HomeController::class, 'index']);
 Route::get('/search', [ArchPackageController::class, 'searchAll']);
 Route::get('/alr-details', [PackageController::class, 'alrDetails'])->name('alr.details');
 Route::get('/aur-details', [PackageController::class, 'aurDetails'])->name('aur.details');
+Route::get('/omarchy-details', [PackageController::class, 'omarchyDetails'])->name('omarchy.details');
 
 Route::get('/aur/search', [ArchPackageController::class, 'searchAUR']);
 Route::get('/alr/search', [ArchPackageController::class, 'searchALR']);

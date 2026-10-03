@@ -2,7 +2,7 @@
 set -eu
 
 apt-get update -qq
-apt-get install -y --no-install-recommends git unzip
+apt-get install -y --no-install-recommends git unzip zstd
 rm -rf /var/lib/apt/lists/*
 
 installer=/tmp/archspectix-composer-installer.php

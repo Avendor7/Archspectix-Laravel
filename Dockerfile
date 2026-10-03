@@ -27,7 +27,9 @@ FROM ${ASSET_STAGE} AS compiled-assets
 
 FROM dunglas/frankenphp:php8.4-bookworm AS production
 WORKDIR /app
-RUN install-php-extensions pdo_pgsql opcache \
+RUN apt-get update && apt-get install -y --no-install-recommends zstd \
+    && rm -rf /var/lib/apt/lists/* \
+    && install-php-extensions pdo_pgsql opcache \
     && mkdir -p /data/caddy /config/caddy \
     && chown -R www-data:www-data /data /config
 COPY --from=node:22-bookworm-slim /usr/local/bin/node /usr/local/bin/node

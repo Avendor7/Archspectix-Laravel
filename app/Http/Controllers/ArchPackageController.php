@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\OmarchyRepository;
 use Exception;
 use GuzzleHttp\Exception\ConnectException;
 use Illuminate\Http\Client\ConnectionException;
@@ -68,9 +69,9 @@ class ArchPackageController extends Controller
     }
 
     /**
-     * SearchComponent both AUR and ALR repositories and normalize results
+     * Search AUR, ALR and Omarchy repositories and normalize results
      */
-    public function searchAll(Request $request): Response
+    public function searchAll(Request $request, OmarchyRepository $omarchy): Response|JsonResponse
     {
         $value = $request->query('value');
         if (! $value) {
@@ -100,9 +101,34 @@ class ArchPackageController extends Controller
 
             return response()->json(['error' => $error->getMessage()], 500);
         }
+        $results = $this->normalizeResults($alrData, $aurData);
+        $omarchyError = null;
+
+        try {
+            foreach ($omarchy->packages() as $package) {
+                if (stripos($package['name'], $value) === false && stripos($package['description'], $value) === false) {
+                    continue;
+                }
+
+                $results[] = [
+                    'name' => $package['name'],
+                    'version' => $package['version'],
+                    'repo' => 'stable / x86_64',
+                    'source' => 'Omarchy',
+                    'description' => $package['description'],
+                    'last_updated_date' => null,
+                    'build_date' => $package['build_date'],
+                    'flagged_date' => null,
+                ];
+            }
+        } catch (\Throwable $error) {
+            Log::warning('Omarchy search fetch failed', ['error' => $error->getMessage()]);
+            $omarchyError = 'Omarchy packages are temporarily unavailable. Please try again.';
+        }
 
         return Inertia::render('SearchResults', [
-            'data' => $this->normalizeResults($alrData, $aurData),
+            'data' => $results,
+            'omarchyError' => $omarchyError,
         ]);
     }
 

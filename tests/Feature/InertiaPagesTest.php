@@ -10,9 +10,10 @@ beforeEach(function () {
     ]);
 });
 
-test('search returns packages from both repositories on an Inertia visit', function () {
+test('search returns Arch and AUR packages on an Inertia visit when Omarchy is unavailable', function () {
     Http::preventStrayRequests();
     Http::fake([
+        'pkgs.omarchy.org/*' => Http::response('Unavailable', 503),
         'archlinux.org/packages/search/json/*' => Http::response([
             'results' => [
                 ['pkgname' => 'bash', 'pkgver' => '5.3', 'repo' => 'core'],
@@ -33,9 +34,10 @@ test('search returns packages from both repositories on an Inertia visit', funct
         ->assertJsonPath('props.data.0.name', 'bash')
         ->assertJsonPath('props.data.0.source', 'ALR')
         ->assertJsonPath('props.data.1.name', 'bash-git')
-        ->assertJsonPath('props.data.1.source', 'AUR');
+        ->assertJsonPath('props.data.1.source', 'AUR')
+        ->assertJsonPath('props.omarchyError', 'Omarchy packages are temporarily unavailable. Please try again.');
 
-    Http::assertSentCount(2);
+    Http::assertSentCount(3);
 });
 
 test('package detail pages render their empty state on an Inertia visit', function (string $url, string $component) {

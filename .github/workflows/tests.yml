@@ -37,6 +37,9 @@ jobs:
       - name: Install Dependencies
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
+      - name: Install Omarchy Database Reader Dependency
+        run: sudo apt-get update && sudo apt-get install -y zstd
+
       - name: Copy Environment File
         run: cp .env.example .env
 
