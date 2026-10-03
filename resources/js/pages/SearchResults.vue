@@ -1,9 +1,9 @@
 <template>
     <SearchLayout>
         <p v-if="omarchyError" role="status" class="mb-4 text-arch-purple">{{ omarchyError }}</p>
-        <div class="bg-slate-100 dark:bg-slate-500 backdrop-blur-sm rounded-2xl border border-slate-900/90 dark:border-slate-400 overflow-hidden">
+        <div class="overflow-hidden rounded-2xl border border-slate-900/90 bg-slate-100 backdrop-blur-sm dark:border-slate-400 dark:bg-slate-500">
             <table>
-                <thead class="bg-slate-600 dark:bg-slate-900 text-slate-200 border-b border-slate-700/50 dark:border-slate-400">
+                <thead class="border-b border-slate-700/50 bg-slate-600 text-slate-200 dark:border-slate-400 dark:bg-slate-900">
                     <tr>
                         <th class="px-6 py-4 text-left text-sm font-semibold">Source</th>
                         <th class="px-6 py-4 text-left text-sm font-semibold">Name</th>
@@ -14,38 +14,63 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-900/30 dark:divide-slate-600 dark:bg-slate-900">
-                    <tr v-for="result in data" :key="`${result.source}-${result.repo}-${result.name}`" class="hover:bg-slate-700/30 dark:hover:bg-slate-700 transition-colors duration-150">
+                    <tr
+                        v-for="result in data"
+                        :key="`${result.source}-${result.repo}-${result.name}`"
+                        class="transition-colors duration-150 hover:bg-slate-700/30 dark:hover:bg-slate-700"
+                    >
                         <td class="px-6 py-4" v-if="result.source == 'ALR'">
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-arch-blue/20 dark:bg-arch-blue/10 text-arch-purple border border-arch-blue/30">{{ result.source }}</span>
+                            <span
+                                class="inline-flex items-center rounded-full border border-arch-blue/30 bg-arch-blue/20 px-2.5 py-0.5 text-xs font-medium text-arch-purple dark:bg-arch-blue/10"
+                                >{{ result.source }}</span
+                            >
                         </td>
-                        <td class="px-6 py-4" v-else-if="result.source == 'AUR'" >
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-arch-blue/30 dark:bg-arch-blue/20 text-arch-blue border border-arch-blue/30">{{ result.source }}</span>
+                        <td class="px-6 py-4" v-else-if="result.source == 'AUR'">
+                            <span
+                                class="inline-flex items-center rounded-full border border-arch-blue/30 bg-arch-blue/30 px-2.5 py-0.5 text-xs font-medium text-arch-blue dark:bg-arch-blue/20"
+                                >{{ result.source }}</span
+                            >
                         </td>
                         <td class="px-6 py-4" v-else-if="result.source == 'Omarchy'">
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-arch-cyan/20 text-arch-cyan border border-arch-cyan/30">{{ result.source }}</span>
+                            <span
+                                class="inline-flex items-center rounded-full border border-arch-cyan/30 bg-arch-cyan/20 px-2.5 py-0.5 text-xs font-medium text-arch-cyan"
+                                >{{ result.source }}</span
+                            >
                         </td>
                         <td class="px-6 py-4" v-if="result.source == 'ALR'">
-                            <Link href="/alr-details" :data="{ value: result.name }" class="text-arch-purple hover:text-arch-cyan transition-colors duration-200 font-medium">
+                            <Link
+                                href="/alr-details"
+                                :data="{ value: result.name }"
+                                class="font-medium text-arch-purple transition-colors duration-200 hover:text-arch-cyan"
+                            >
                                 {{ result.name }}
                             </Link>
                         </td>
-                        <td class="px-6 py-4" v-else-if="result.source == 'AUR'" >
-                            <Link href="/aur-details" :data="{ value: result.name }" class="text-arch-purple hover:text-arch-cyan transition-colors duration-200 font-medium">
+                        <td class="px-6 py-4" v-else-if="result.source == 'AUR'">
+                            <Link
+                                href="/aur-details"
+                                :data="{ value: result.name }"
+                                class="font-medium text-arch-purple transition-colors duration-200 hover:text-arch-cyan"
+                            >
                                 {{ result.name }}
                             </Link>
                         </td>
                         <td class="px-6 py-4" v-else-if="result.source == 'Omarchy'">
-                            <Link href="/omarchy-details" :data="{ value: result.name }" class="text-arch-purple hover:text-arch-cyan transition-colors duration-200 font-medium">
+                            <Link
+                                href="/omarchy-details"
+                                :data="{ value: result.name }"
+                                class="font-medium text-arch-purple transition-colors duration-200 hover:text-arch-cyan"
+                            >
                                 {{ result.name }}
                             </Link>
                         </td>
-                        <td class="px-6 py-4 text-slate-700 dark:text-slate-300 font-mono text-sm">{{ result.version }}</td>
+                        <td class="px-6 py-4 font-mono text-sm text-slate-700 dark:text-slate-300">{{ result.version }}</td>
                         <td class="px-6 py-4 text-slate-700 dark:text-slate-300">{{ result.repo }}</td>
-                        <td class="px-6 py-4 text-slate-700 dark:text-slate-300 text-sm">
+                        <td class="px-6 py-4 text-sm text-slate-700 dark:text-slate-300">
                             <span v-if="result.source == 'Omarchy' && result.build_date">Built {{ formatDate(result.build_date) }}</span>
                             <span v-else>{{ formatDate(result.last_updated_date) }}</span>
                         </td>
-                        <td class="px-6 py-4 text-slate-700 dark:text-slate-300 text-sm">{{ formatDate(result.flagged_date) }}</td>
+                        <td class="px-6 py-4 text-sm text-slate-700 dark:text-slate-300">{{ formatDate(result.flagged_date) }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -102,5 +127,4 @@ td {
     padding: 10px;
     text-align: left;
 }
-
 </style>

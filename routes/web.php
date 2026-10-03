@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 use App\Http\Controllers\ArchPackageController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PackageController;
+use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/search', [ArchPackageController::class, 'searchAll']);

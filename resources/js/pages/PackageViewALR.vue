@@ -2,7 +2,7 @@
     <SearchLayout>
         <div v-if="data.results.length">
             <div class="container">
-                <h1 class="text-5xl font-bold mb-6 pb-4 text-white">
+                <h1 class="mb-6 pb-4 text-5xl font-bold text-white">
                     {{ data.results[0].pkgname }}
                 </h1>
                 <table class="resource">

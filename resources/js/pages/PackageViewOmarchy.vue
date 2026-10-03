@@ -2,8 +2,8 @@
     <SearchLayout>
         <p v-if="error" role="status" class="text-arch-purple">{{ error }}</p>
         <div v-else-if="package">
-            <h1 class="text-5xl font-bold mb-6 pb-4 text-arch-purple">{{ package.name }}</h1>
-            <table class="resource bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-200">
+            <h1 class="mb-6 pb-4 text-5xl font-bold text-arch-purple">{{ package.name }}</h1>
+            <table class="resource bg-slate-100 text-slate-900 dark:bg-slate-950 dark:text-slate-200">
                 <tbody>
                     <tr>
                         <th>Version</th>
@@ -23,7 +23,9 @@
                     </tr>
                     <tr>
                         <th>URL</th>
-                        <td><a :href="package.url" class="text-arch-purple">{{ package.url }}</a></td>
+                        <td>
+                            <a :href="package.url" class="text-arch-purple">{{ package.url }}</a>
+                        </td>
                     </tr>
                     <tr>
                         <th>License(s)</th>
@@ -49,19 +51,19 @@
             </table>
             <div class="mt-8 grid gap-3 md:grid-cols-3">
                 <div class="rounded-xl border border-arch-purple p-5">
-                    <h2 class="font-bold mb-3">Dependencies</h2>
+                    <h2 class="mb-3 font-bold">Dependencies</h2>
                     <ul>
                         <li v-for="dependency in package.depends" :key="dependency">{{ dependency }}</li>
                     </ul>
                 </div>
                 <div class="rounded-xl border border-arch-purple p-5">
-                    <h2 class="font-bold mb-3">Optional Dependencies</h2>
+                    <h2 class="mb-3 font-bold">Optional Dependencies</h2>
                     <ul>
                         <li v-for="dependency in package.optdepends" :key="dependency">{{ dependency }}</li>
                     </ul>
                 </div>
                 <div class="rounded-xl border border-arch-purple p-5">
-                    <h2 class="font-bold mb-3">Make Dependencies</h2>
+                    <h2 class="mb-3 font-bold">Make Dependencies</h2>
                     <ul>
                         <li v-for="dependency in package.makedepends" :key="dependency">{{ dependency }}</li>
                     </ul>

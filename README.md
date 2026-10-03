@@ -10,8 +10,9 @@ The first request downloads and parses it, then Laravel caches the packages for
 pacman or Omarchy installation is needed.
 
 The server needs the `zstd` executable on its PATH and PHP's Phar extension.
-The Nixpacks configuration includes `zstd`; on Debian/Ubuntu install it with
-`apt install zstd`. Laravel uses the configured cache store (`CACHE_STORE`);
+The Docker image, Nixpacks configuration and CI jobs include `zstd`; on
+Debian/Ubuntu install it with `apt install zstd`.
+Laravel uses the configured cache store (`CACHE_STORE`);
 the default database store needs the existing cache migration to have run.
 
 A failed download or invalid database is not cached. Search still shows Arch/AUR

@@ -26,7 +26,10 @@ function omarchyTestDatabase(array $descriptions): string
 
 beforeEach(function () {
     $this->withoutVite();
-    config(['app.key' => 'base64:'.base64_encode(str_repeat('x', 32))]);
+    config([
+        'app.key' => 'base64:'.base64_encode(str_repeat('x', 32)),
+        'inertia.ssr.enabled' => false,
+    ]);
     Cache::flush();
     Http::preventStrayRequests();
 
